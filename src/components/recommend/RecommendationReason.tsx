@@ -7,13 +7,13 @@ interface RecommendationReasonProps {
 
 export default function RecommendationReason({ recommendation }: RecommendationReasonProps) {
   return (
-    <div className="relative rounded-2xl bg-white border border-[#ded2bf] p-10 shadow-sm text-center">
+    <div className="relative rounded-2xl bg-white border border-[#ded2bf] p-10 shadow-sm text-center max-[520px]:p-7 max-[380px]:p-5">
       <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-[#8e9a86] px-6 py-1.5 text-sm font-bold text-white shadow-sm">
         小屋推荐推荐物语 🌸
       </div>
       <p className="text-[17px] leading-9 text-[#6d6358] font-serif">“{recommendation.reason}”</p>
       <div className="my-7 border-t border-dashed border-[#dfd6c5]" />
-      <div className="flex justify-between text-base font-bold text-[#a0907d]">
+      <div className="flex justify-between text-base font-bold text-[#a0907d] gap-3 max-[380px]:flex-col max-[380px]:items-center max-[380px]:text-sm">
         <span className="flex items-center gap-2">
           <RotateCw size={16} /> 最近品尝: {recommendation.lastTried}
         </span>

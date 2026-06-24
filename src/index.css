@@ -215,10 +215,42 @@ body {
   background-color: #e6d4b7;
   color: #5d5449; /* Deep warm brown for cozy reading */
   font-family: "Inter", system-ui, sans-serif;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 button {
   cursor: pointer;
+}
+
+#root {
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+input,
+textarea,
+button {
+  min-width: 0;
+}
+
+@media (max-width: 520px) {
+  .mobile-stack {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mobile-tight-card {
+    padding: 1rem !important;
+    border-radius: 20px !important;
+  }
 }
 
 .font-serif {

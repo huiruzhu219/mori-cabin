@@ -347,13 +347,13 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
         </button>
       </section>
 
-      <article className="rounded-[24px] bg-white border border-[#dfd6c5] p-7 shadow-[0_5px_14px_rgba(93,84,73,0.05)]">
-        <div className="flex items-center justify-between mb-5">
-          <h3 className="text-[20px] font-bold font-serif text-[#e3a387] flex items-center gap-2">
+      <article className="rounded-[24px] bg-white border border-[#dfd6c5] p-7 shadow-[0_5px_14px_rgba(93,84,73,0.05)] max-[520px]:p-5 max-[380px]:p-4">
+        <div className="flex items-center justify-between mb-5 gap-3 max-[380px]:items-start">
+          <h3 className="text-[20px] font-bold font-serif text-[#e3a387] flex items-center gap-2 min-w-0 max-[380px]:text-[17px]">
             <Heart size={21} strokeWidth={1.9} />
             心动清单 · WISHLIST
           </h3>
-          <label className="flex items-center gap-2 text-base font-bold text-[#8a7d70]">
+          <label className="flex items-center gap-2 text-base font-bold text-[#8a7d70] flex-shrink-0 max-[380px]:text-sm">
             <input
               type="checkbox"
               checked={wishlistEnabled}
@@ -365,11 +365,11 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
         </div>
         {wishlistEnabled ? (
           <>
-            <div className="flex gap-6 items-center max-[520px]:gap-4">
+            <div className="flex gap-6 items-center max-[520px]:gap-4 max-[380px]:flex-col max-[380px]:items-stretch">
               <button
                 type="button"
                 onClick={() => wishlistInputRef.current?.click()}
-                className="relative w-[168px] h-[168px] rounded-2xl border border-dashed border-[#dfd6c5] bg-[#faf6ee] flex flex-col items-center justify-center text-[#e3a387] flex-shrink-0 overflow-hidden group max-[520px]:w-[112px] max-[520px]:h-[112px]"
+                className="relative w-[168px] h-[168px] rounded-2xl border border-dashed border-[#dfd6c5] bg-[#faf6ee] flex flex-col items-center justify-center text-[#e3a387] flex-shrink-0 overflow-hidden group max-[520px]:w-[112px] max-[520px]:h-[112px] max-[380px]:w-full max-[380px]:h-[150px]"
               >
                 {wishlistImage ? (
                   <img src={wishlistImage} alt="心动照片" className="absolute inset-0 w-full h-full object-cover" />
@@ -394,7 +394,7 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
                   }}
                 />
               </button>
-              <div className="flex-1 space-y-4">
+              <div className="flex-1 space-y-4 min-w-0">
                 <div className="inline-flex rounded-full border border-[#dfd6c5] bg-[#fffdf8] p-1">
                   <button
                     type="button"
@@ -423,7 +423,7 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
                   placeholder="为什么心动？比如：路过没买到、朋友推荐..."
                   className="w-full bg-transparent text-sm text-[#a0907d] outline-none placeholder:text-[#b8ad9f]"
                 />
-                <div className="flex gap-3">
+                <div className="flex gap-3 flex-wrap">
                   <span className="rounded-full bg-[#fff3ec] border border-[#f0d2c5] px-4 py-2 text-sm font-bold text-[#c86f50]">下次一定</span>
                   <button
                     type="button"

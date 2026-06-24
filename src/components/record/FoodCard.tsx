@@ -65,10 +65,10 @@ export default function FoodCard({
   }, [imageUrl]);
 
   return (
-    <article className="relative rounded-[24px] bg-white border border-[#dfd6c5] p-5 shadow-[0_5px_14px_rgba(93,84,73,0.05)]">
+    <article className="relative rounded-[24px] bg-white border border-[#dfd6c5] p-5 shadow-[0_5px_14px_rgba(93,84,73,0.05)] max-[380px]:p-4">
       <div className="washi-tape-green -top-3 -right-1 h-6 w-[100px] opacity-45" />
       <div className="mb-5 flex items-center justify-between gap-3">
-        <h3 className={`text-[20px] font-bold font-serif tracking-wide flex items-center gap-2 ${iconColor}`}>
+        <h3 className={`text-[20px] font-bold font-serif tracking-wide flex items-center gap-2 min-w-0 max-[380px]:text-[17px] ${iconColor}`}>
           <Icon size={22} strokeWidth={1.9} />
           {title} · {subtitle}
         </h3>
@@ -83,11 +83,11 @@ export default function FoodCard({
           </button>
         )}
       </div>
-      <div className="flex gap-6 items-start max-[520px]:gap-4">
+      <div className="flex gap-6 items-start max-[520px]:gap-4 max-[380px]:flex-col">
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="relative w-[168px] h-[168px] rounded-lg bg-[#faf6ee] border border-[#dfd6c5] overflow-hidden flex-shrink-0 shadow-inner group max-[520px]:w-[112px] max-[520px]:h-[112px]"
+          className="relative w-[168px] h-[168px] rounded-lg bg-[#faf6ee] border border-[#dfd6c5] overflow-hidden flex-shrink-0 shadow-inner group max-[520px]:w-[112px] max-[520px]:h-[112px] max-[380px]:w-full max-[380px]:h-[170px]"
         >
           {imageFailed ? (
             <span className="absolute inset-0 flex flex-col items-center justify-center bg-[#faf6ee] text-[#a0907d]">

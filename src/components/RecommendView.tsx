@@ -140,22 +140,22 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
 
   return (
     <div className="space-y-8 pb-8">
-      <header className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
+      <header className="flex justify-between items-center gap-3">
+        <div className="flex items-center gap-4 min-w-0">
           <AvatarImage
             src={userProfile?.avatar || "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200&auto=format&fit=crop"}
             name={userProfile?.name || "小葵"}
-            className="w-12 h-12 rounded-full object-cover border border-[#dfd6c5] shadow-sm"
+            className="w-12 h-12 rounded-full object-cover border border-[#dfd6c5] shadow-sm flex-shrink-0 max-[380px]:w-10 max-[380px]:h-10"
           />
-          <h1 className="text-[24px] leading-none font-bold font-serif tracking-wide">选择困难终结者</h1>
+          <h1 className="text-[24px] leading-tight font-bold font-serif tracking-wide min-w-0 break-words max-[520px]:text-[20px] max-[380px]:text-[18px]">选择困难终结者</h1>
         </div>
-        <button onClick={() => onNavigate?.("settings")} className="w-[54px] h-[54px] rounded-full bg-white border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm">
+        <button onClick={() => onNavigate?.("settings")} className="w-[54px] h-[54px] rounded-full bg-white border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm flex-shrink-0 max-[380px]:w-11 max-[380px]:h-11">
           <Settings size={25} strokeWidth={1.8} />
         </button>
       </header>
 
       <section className="text-center space-y-5 pt-6">
-        <h2 className="text-[26px] font-bold font-serif tracking-wide">今天吃点/喝点什么？ ☘</h2>
+        <h2 className="text-[26px] font-bold font-serif tracking-wide max-[520px]:text-[22px] max-[380px]:text-[20px]">今天吃点/喝点什么？ ☘</h2>
         <RecommendToggle type={type} onChange={setType} />
       </section>
 
@@ -170,11 +170,11 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
           <RecommendationReason recommendation={recommendation} />
 
           <div className="space-y-5">
-            <button onClick={acceptRecommendation} className="w-full h-[60px] rounded-full bg-[#8e9a86] py-3 text-xl font-bold text-white flex items-center justify-center gap-3 shadow-sm">
+            <button onClick={acceptRecommendation} className="w-full h-[60px] rounded-full bg-[#8e9a86] py-3 text-xl font-bold text-white flex items-center justify-center gap-3 shadow-sm max-[380px]:text-base">
               {saved ? <Check size={22} /> : <Bookmark size={22} />}
               {saved ? "已加入今日记录 ✨" : "就决定是它了！ ✨"}
             </button>
-            <button onClick={() => loadRecommendation(type)} className="w-full h-[60px] rounded-full bg-white border border-[#dfd6c5] py-3 text-xl font-bold text-[#8e9a86] flex items-center justify-center gap-3 shadow-sm">
+            <button onClick={() => loadRecommendation(type)} className="w-full h-[60px] rounded-full bg-white border border-[#dfd6c5] py-3 text-xl font-bold text-[#8e9a86] flex items-center justify-center gap-3 shadow-sm max-[380px]:text-base">
               <RotateCw size={20} />
               不中意，再转一次 🍀
             </button>

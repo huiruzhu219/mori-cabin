@@ -79,21 +79,23 @@ export default function MemoryView({ entries, onNavigate, userProfile }: MemoryV
 
   return (
     <div className="space-y-8 pb-8">
-      <header className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
+      <header className="flex justify-between items-center gap-3">
+        <div className="flex items-center gap-4 min-w-0">
           <AvatarImage
             src={userProfile?.avatar || "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200&auto=format&fit=crop"}
             name={userProfile?.name || "山野雏菊"}
-            className="w-12 h-12 rounded-full object-cover border border-[#dfd6c5] shadow-sm"
+            className="w-12 h-12 rounded-full object-cover border border-[#dfd6c5] shadow-sm flex-shrink-0 max-[380px]:w-10 max-[380px]:h-10"
           />
-          <h1 className="text-[24px] font-bold font-serif tracking-wide">{userProfile?.name || "山野雏菊"} 🌼 的回忆册</h1>
+          <h1 className="text-[24px] font-bold font-serif tracking-wide min-w-0 break-words max-[520px]:text-[20px] max-[380px]:text-[18px]">
+            {userProfile?.name || "山野雏菊"} 🌼 的回忆册
+          </h1>
         </div>
-        <button onClick={() => onNavigate?.("settings")} className="w-[54px] h-[54px] rounded-full bg-white border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm">
+        <button onClick={() => onNavigate?.("settings")} className="w-[54px] h-[54px] rounded-full bg-white border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm flex-shrink-0 max-[380px]:w-11 max-[380px]:h-11">
           <Settings size={25} strokeWidth={1.8} />
         </button>
       </header>
 
-      <div className="mx-auto w-[312px] rounded-full bg-white border border-[#ded2bf] p-1 flex gap-1 shadow-sm">
+      <div className="mx-auto w-[312px] max-w-full rounded-full bg-white border border-[#ded2bf] p-1 flex gap-1 shadow-sm">
         <button onClick={() => setMode("month")} className={`flex-1 rounded-full py-2 text-lg font-bold ${mode === "month" ? "bg-[#8e9a86] text-white" : "text-[#9f907d]"}`}>
           统计回忆 🌌
         </button>
@@ -109,11 +111,11 @@ export default function MemoryView({ entries, onNavigate, userProfile }: MemoryV
           <SummaryCards stats={stats} />
 
           <button onClick={() => setMode("moodDetail")} className="w-full rounded-[24px] bg-white border border-[#ded2bf] p-7 shadow-sm text-left">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 gap-3 max-[380px]:flex-col max-[380px]:items-start">
               <div className="flex items-center gap-3">
                 <h3 className="text-lg font-bold text-[#8e9a86] font-serif">心情波动指引线 🧡</h3>
               </div>
-              <span className="rounded-md bg-[#f4f5f2] px-3 py-1 text-sm font-bold text-[#9f907d]">点击查看详情 →</span>
+              <span className="rounded-md bg-[#f4f5f2] px-3 py-1 text-sm font-bold text-[#9f907d] max-[380px]:text-xs">点击查看详情 →</span>
             </div>
             <MoodChart entries={visibleEntries} />
             <p className="mt-6 text-center text-base text-[#a0907d] italic font-serif">“点击此部分进入情绪流回看，细阅每一次心情浮沉。”</p>
@@ -157,7 +159,7 @@ export default function MemoryView({ entries, onNavigate, userProfile }: MemoryV
                   </div>
                 </div>
               )}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 max-[380px]:grid-cols-1">
                 <div className="rounded-2xl bg-[#fcf9f2] p-4">
                   <p className="text-sm text-[#a0907d]">吃的</p>
                   <p className="text-base font-bold mt-1">{getFoodItems(activeEntry).map((item) => item.name).join("、") || "未记录"}</p>

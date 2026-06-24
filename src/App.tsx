@@ -243,8 +243,8 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen w-full bg-[#e6d4b7] text-[#5d5449] flex justify-center ${theme}`}>
-      <div className="w-full max-w-[672px] bg-[#fcf9f2] min-h-screen relative flex flex-col border-x border-[#e1d1b8] md:shadow-2xl md:overflow-hidden paper-texture">
+    <div className={`min-h-screen w-full bg-[#e6d4b7] text-[#5d5449] flex justify-center overflow-x-hidden ${theme}`}>
+      <div className="w-full max-w-[672px] bg-[#fcf9f2] min-h-screen relative flex flex-col border-x border-[#e1d1b8] md:shadow-2xl md:overflow-hidden paper-texture max-[520px]:max-w-none max-[520px]:border-x-0">
         {!userProfile ? (
           <main className="flex-1 overflow-y-auto custom-scrollbar">
             <LoginView onLoginSuccess={changeProfile} />
