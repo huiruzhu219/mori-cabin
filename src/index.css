@@ -1,0 +1,371 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Inter:wght@305;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-handwritten: "Caveat", "Zeyada", cursive;
+  
+  --color-primary: #8e9a86; /* Mori green / sage */
+  --color-primary-container: #f4efe6; /* Ivory cream */
+  --color-on-primary-container: #5d5449; /* Deep warm brown */
+  --color-secondary: #e3a387; /* Soft peach / sweet salmon */
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #faf0eb; /* Pastel warm orange */
+  --color-on-secondary-container: #b36340;
+  --color-tertiary: #dda15e; /* Earthy warm amber */
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #fdfaf0; /* Warm milk yellow */
+  --color-on-tertiary-container: #7a6b4c;
+  
+  --color-background: #faf6ee; /* Cozy soft milk-tea/ivory base */
+  --color-surface: #ffffff; /* Classic polaroid white base */
+  --color-surface-container: #fdfbf7; /* Very soft warm cream */
+  --color-surface-container-low: #f7f3e9; /* Deepen ivory */
+  --color-surface-container-high: #ebdcc3; /* Kraft paper color */
+  --color-surface-container-highest: #d9c5a3; /* Deeper kraft paper card */
+  
+  --color-outline: #e6dfd1; /* Soft warm outline */
+  --color-outline-variant: #dfd6c5;
+}
+
+/* Custom Scrollbar in cozy style */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #dfd6c5;
+  border-radius: 4px;
+}
+
+/* Simple No Scrollbar Utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Scrapbook texture patterns */
+.mori-paper {
+  background-color: #faf6ee;
+  background-image: radial-gradient(#efe9de 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+.paper-texture {
+  background-color: #fcf9f2;
+  background-image: radial-gradient(#ece1d0 2px, transparent 2px);
+  background-size: 27px 27px;
+}
+
+/* Translucent sweet washi tapes */
+.washi-tape {
+  position: absolute;
+  height: 22px;
+  width: 75px;
+  opacity: 0.75;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(227, 163, 135, 0.45),
+    rgba(227, 163, 135, 0.45) 8px,
+    rgba(227, 163, 135, 0.55) 8px,
+    rgba(227, 163, 135, 0.55) 16px
+  );
+  backdrop-filter: blur(0.5px);
+  border-left: 1.5px dashed rgba(255, 255, 255, 0.6);
+  border-right: 1.5px dashed rgba(255, 255, 255, 0.6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transform: rotate(-3deg);
+  z-index: 10;
+}
+
+.washi-tape-green {
+  position: absolute;
+  height: 20px;
+  width: 70px;
+  opacity: 0.75;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(142, 154, 134, 0.35),
+    rgba(142, 154, 134, 0.35) 6px,
+    rgba(142, 154, 134, 0.45) 6px,
+    rgba(142, 154, 134, 0.45) 12px
+  );
+  backdrop-filter: blur(0.5px);
+  border-left: 1.5px dashed rgba(255, 255, 255, 0.5);
+  border-right: 1.5px dashed rgba(255, 255, 255, 0.5);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transform: rotate(5deg);
+  z-index: 10;
+}
+
+.washi-tape-yellow {
+  position: absolute;
+  height: 22px;
+  width: 80px;
+  opacity: 0.72;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(221, 161, 94, 0.35),
+    rgba(221, 161, 94, 0.35) 10px,
+    rgba(221, 161, 94, 0.45) 10px,
+    rgba(221, 161, 94, 0.45) 20px
+  );
+  backdrop-filter: blur(0.5px);
+  border-left: 1.5px dashed rgba(255, 255, 255, 0.5);
+  border-right: 1.5px dashed rgba(255, 255, 255, 0.5);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transform: rotate(-6deg);
+  z-index: 10;
+}
+
+/* Warm cozy scrapbook offset-shadows */
+.scrapbook-shadow {
+  box-shadow: 0 8px 24px rgba(93, 84, 73, 0.08);
+}
+
+.sticker-rotate-left { 
+  transform: rotate(-1.5deg);
+  border: 1px solid rgba(93, 84, 73, 0.08) !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(93, 84, 73, 0.06) !important;
+  transition: all 0.25s ease;
+}
+.sticker-rotate-right { 
+  transform: rotate(1.5deg);
+  border: 1px solid rgba(93, 84, 73, 0.08) !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 15px rgba(93, 84, 73, 0.06) !important;
+  transition: all 0.25s ease;
+}
+
+.sticker-rotate-left:hover {
+  transform: scale(1.01) rotate(-0.5deg);
+  box-shadow: 0 6px 20px rgba(93, 84, 73, 0.09) !important;
+}
+
+.sticker-rotate-right:hover {
+  transform: scale(1.01) rotate(0.6deg);
+  box-shadow: 0 6px 20px rgba(93, 84, 73, 0.09) !important;
+}
+
+@keyframes floating {
+  0% { transform: translateY(0px) rotate(-1deg); }
+  50% { transform: translateY(-4px) rotate(1deg); }
+  100% { transform: translateY(0px) rotate(-1deg); }
+}
+.float-anim { 
+  animation: floating 4.5s ease-in-out infinite; 
+}
+
+@keyframes floating-tab {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(142, 154, 134, 0.16);
+  }
+  50% {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(142, 154, 134, 0.22);
+  }
+}
+
+.floating-tab {
+  animation: floating-tab 2.8s ease-in-out infinite;
+}
+
+/* Ribbon style tags */
+.ribbon-title {
+  position: relative;
+  background: var(--primary-color, #8e9a86); /* Sage green */
+  color: #ffffff;
+  padding: 4px 14px;
+  clip-path: polygon(100% 0, 95% 50%, 100% 100%, 0% 100%, 5% 50%, 0% 0%);
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(93, 84, 73, 0.1);
+}
+
+.page-curl {
+  position: relative;
+}
+.page-curl::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 12px 12px;
+  border-color: transparent transparent #ebdcc3 transparent;
+  box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.04);
+}
+
+/* Polaroid-like framing */
+.polaroid-card {
+  background: white;
+  padding: 10px 10px 24px 10px;
+  border: 1px solid rgba(93, 84, 73, 0.08);
+  box-shadow: 0 6px 18px rgba(93, 84, 73, 0.08);
+}
+
+body {
+  background-color: #e6d4b7;
+  color: #5d5449; /* Deep warm brown for cozy reading */
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+.font-serif {
+  letter-spacing: 0;
+}
+
+/* Custom Theme Color Rules using precise class matching to avoid substring collision bugs */
+:root {
+  --primary-color: #8e9a86;
+  --primary-hover-color: #7e8a76;
+  --primary-color-soft: rgba(142, 154, 134, 0.12);
+  --secondary-color: #e3a387;
+  --secondary-hover-color: #df9371;
+  --secondary-color-soft: rgba(227, 163, 135, 0.15);
+}
+
+/* Primary Color Base Maps */
+[class~="bg-[#8e9a86]"] {
+  background-color: var(--primary-color) !important;
+}
+[class~="text-[#8e9a86]"] {
+  color: var(--primary-color) !important;
+}
+[class~="border-[#8e9a86]"] {
+  border-color: var(--primary-color) !important;
+}
+[class~="fill-[#8e9a86]"] {
+  fill: var(--primary-color) !important;
+}
+[class~="stroke-[#8e9a86]"] {
+  stroke: var(--primary-color) !important;
+}
+
+/* Soft translucent primary backgrounds (scaled dynamically via color-mix) */
+[class~="bg-[#8e9a86]/5"] {
+  background-color: color-mix(in srgb, var(--primary-color) 5%, transparent) !important;
+}
+[class~="bg-[#8e9a86]/10"] {
+  background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+}
+[class~="bg-[#8e9a86]/12"] {
+  background-color: color-mix(in srgb, var(--primary-color) 12%, transparent) !important;
+}
+[class~="bg-[#8e9a86]/15"] {
+  background-color: color-mix(in srgb, var(--primary-color) 15%, transparent) !important;
+}
+[class~="bg-[#8e9a86]/18"] {
+  background-color: color-mix(in srgb, var(--primary-color) 18%, transparent) !important;
+}
+[class~="bg-[#8e9a86]/25"] {
+  background-color: color-mix(in srgb, var(--primary-color) 25%, transparent) !important;
+}
+
+/* Soft translucent primary fill/stroke */
+[class~="fill-[#8e9a86]/10"] {
+  fill: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+}
+[class~="fill-[#8e9a86]/20"] {
+  fill: color-mix(in srgb, var(--primary-color) 20%, transparent) !important;
+}
+
+/* Primary Hover Maps */
+[class~="hover:bg-[#7e8a76]"]:hover {
+  background-color: var(--primary-hover-color) !important;
+}
+[class~="hover:text-[#8e9a86]"]:hover {
+  color: var(--primary-color) !important;
+}
+[class~="hover:bg-[#8e9a86]/5"]:hover {
+  background-color: color-mix(in srgb, var(--primary-color) 5%, transparent) !important;
+}
+[class~="hover:bg-[#8e9a86]/10"]:hover {
+  background-color: color-mix(in srgb, var(--primary-color) 10%, transparent) !important;
+}
+
+/* Secondary Color Base Maps */
+[class~="bg-[#e3a387]"] {
+  background-color: var(--secondary-color) !important;
+}
+[class~="text-[#e3a387]"] {
+  color: var(--secondary-color) !important;
+}
+[class~="border-[#e3a387]"] {
+  border-color: var(--secondary-color) !important;
+}
+[class~="fill-[#e3a387]"] {
+  fill: var(--secondary-color) !important;
+}
+[class~="stroke-[#e3a387]"] {
+  stroke: var(--secondary-color) !important;
+}
+
+/* Soft translucent secondary backgrounds */
+[class~="bg-[#e3a387]/10"] {
+  background-color: color-mix(in srgb, var(--secondary-color) 10%, transparent) !important;
+}
+[class~="bg-[#e3a387]/25"] {
+  background-color: color-mix(in srgb, var(--secondary-color) 25%, transparent) !important;
+}
+
+/* Secondary Hover Maps */
+[class~="hover:bg-[#df9371]"]:hover {
+  background-color: var(--secondary-hover-color) !important;
+}
+
+/* Define each Theme's variables */
+.theme-mori {
+  --primary-color: #8e9a86;
+  --primary-hover-color: #7e8a76;
+  --primary-color-soft: rgba(142, 154, 134, 0.12);
+  --secondary-color: #e3a387;
+  --secondary-hover-color: #df9371;
+  --secondary-color-soft: rgba(227, 163, 135, 0.15);
+}
+
+.theme-amber {
+  --primary-color: #b25e38;
+  --primary-hover-color: #964d2b;
+  --primary-color-soft: rgba(178, 94, 56, 0.12);
+  --secondary-color: #cca45a;
+  --secondary-hover-color: #b58d43;
+  --secondary-color-soft: rgba(204, 164, 90, 0.15);
+}
+
+.theme-twilight {
+  --primary-color: #8c7355;
+  --primary-hover-color: #755f45;
+  --primary-color-soft: rgba(140, 115, 85, 0.12);
+  --secondary-color: #a37ea8;
+  --secondary-hover-color: #8d6892;
+  --secondary-color-soft: rgba(163, 126, 168, 0.15);
+}
+
+.theme-matcha {
+  --primary-color: #6c755e;
+  --primary-hover-color: #565d4b;
+  --primary-color-soft: rgba(108, 117, 94, 0.12);
+  --secondary-color: #a67258;
+  --secondary-hover-color: #8f5f46;
+  --secondary-color-soft: rgba(166, 114, 88, 0.15);
+}
+
+.theme-sunset {
+  --primary-color: #cc6d52;
+  --primary-hover-color: #b55d44;
+  --primary-color-soft: rgba(204, 109, 82, 0.12);
+  --secondary-color: #e8a556;
+  --secondary-hover-color: #cf9046;
+  --secondary-color-soft: rgba(232, 165, 86, 0.15);
+}

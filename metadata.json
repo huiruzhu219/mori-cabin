@@ -1,0 +1,6 @@
+{
+  "name": "Today is Also Good",
+  "description": "A calming Mori-kei forest aesthetic daily journal, scrapbook-style memory keeper, and AI healing recommender.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
