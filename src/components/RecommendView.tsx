@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Bookmark, Check, RotateCw, Settings } from "lucide-react";
 import { ActiveTab, JournalEntry, Recommendation, UserProfile } from "../types";
 import MagicCard from "./recommend/MagicCard";
@@ -92,12 +92,30 @@ function buildRecommendationEntry(recommendation: Recommendation, type: "eat" | 
   };
 }
 
+async function polishRecommendationReason(recommendation: Recommendation, type: "eat" | "drink") {
+  const response = await fetch("/api/ai/recommend-reason", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      recommendation,
+      type: type === "eat" ? "food" : "drink",
+    }),
+  });
+  const data = await response.json();
+  if (!data?.success) return null;
+  return {
+    reason: typeof data.reason === "string" ? data.reason : recommendation.reason,
+    reasons: Array.isArray(data.reasons) ? data.reasons.filter((item: unknown) => typeof item === "string").slice(0, 3) : recommendation.reasons,
+  };
+}
+
 export default function RecommendView({ onNavigate, onAddEntry, userProfile, entries = [] }: RecommendViewProps) {
   const [type, setType] = useState<"eat" | "drink">("eat");
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [shownIds, setShownIds] = useState<string[]>([]);
+  const requestIdRef = useRef(0);
 
   const rememberRecommendation = (nextRecommendation: Recommendation) => {
     setRecommendation(nextRecommendation);
@@ -107,6 +125,8 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
   };
 
   const loadRecommendation = async (nextType = type, resetHistory = false) => {
+    const requestId = requestIdRef.current + 1;
+    requestIdRef.current = requestId;
     setLoading(true);
     setSaved(false);
     const excludeIds = resetHistory ? [] : shownIds;
@@ -114,6 +134,12 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
     if (localRecommendation) {
       rememberRecommendation(localRecommendation);
       setLoading(false);
+      polishRecommendationReason(localRecommendation, nextType)
+        .then((polished) => {
+          if (!polished || requestIdRef.current !== requestId) return;
+          rememberRecommendation({ ...localRecommendation, ...polished });
+        })
+        .catch((error) => console.warn("Recommendation reason polish fallback used", error));
       return;
     }
     try {

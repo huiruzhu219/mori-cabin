@@ -526,6 +526,72 @@ app.post("/api/ai/monthly-summary", async (req, res) => {
   }
 });
 
+function normalizeRecommendationReason(value: unknown, fallback: string) {
+  const text = String(value || fallback || "").replace(/\s+/g, " ").trim();
+  return text.length > 56 ? `${text.slice(0, 54)}...` : text;
+}
+
+function normalizeReasonChips(value: unknown, fallback: string[]) {
+  const chips = Array.isArray(value) ? value : fallback;
+  return chips
+    .map((item) => String(item || "").replace(/\s+/g, " ").trim())
+    .filter(Boolean)
+    .slice(0, 3)
+    .map((item) => (item.length > 12 ? item.slice(0, 12) : item));
+}
+
+app.post("/api/ai/recommend-reason", async (req, res) => {
+  const recommendation = req.body?.recommendation || {};
+  const type = req.body?.type === "drink" ? "drink" : "food";
+  const fallbackReasons = normalizeReasonChips(recommendation.reasons, [
+    recommendation.tag ? `偏好${recommendation.tag}` : "贴合最近偏好",
+    Number(recommendation.rating) >= 4.5 ? "评分较高" : "适合今天",
+  ]);
+  const fallbackReason = normalizeRecommendationReason(
+    recommendation.reason,
+    `因为${fallbackReasons.join(" + ")}，今天可以把选择交给它。`,
+  );
+
+  try {
+    const content = await callCompatibleChat([
+      {
+        role: "system",
+        content:
+          "你是 Mori Cabin 的温柔推荐文案助手。请把算法给出的吃喝推荐理由润色成中文生活化短句。要求：1. 像朋友轻声建议，不要营销腔；2. 不要说 AI、算法、数据、模型；3. 不要编造用户没提供的信息；4. reason 28-52 个中文字符，适合移动端一行展示；5. reasons 输出 2-3 个极短依据，每个不超过 8 个字；6. 只输出 JSON，不要 Markdown。",
+      },
+      {
+        role: "user",
+        content: JSON.stringify({
+          type,
+          name: recommendation.name,
+          rating: recommendation.rating,
+          tag: recommendation.tag,
+          lastTried: recommendation.lastTried,
+          historyEval: recommendation.historyEval,
+          rawReason: recommendation.reason,
+          algorithmReasons: recommendation.reasons || [],
+        }),
+      },
+    ], 0.65);
+
+    if (!content) {
+      res.json({ success: true, provider: "mock", reason: fallbackReason, reasons: fallbackReasons });
+      return;
+    }
+
+    const parsed = JSON.parse(extractJson(content)) as { reason?: string; reasons?: string[] };
+    res.json({
+      success: true,
+      provider: getProvider(),
+      reason: normalizeRecommendationReason(parsed.reason, fallbackReason),
+      reasons: normalizeReasonChips(parsed.reasons, fallbackReasons),
+    });
+  } catch (error) {
+    console.error("Recommendation reason polish failed", error);
+    res.json({ success: true, provider: "mock", reason: fallbackReason, reasons: fallbackReasons, fallback: true });
+  }
+});
+
 app.post("/api/ai/recommend", async (req, res) => {
   const type = req.body?.type === "drink" ? "drink" : "eat";
   const pool = recommendations[type];
