@@ -97,13 +97,22 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [shownIds, setShownIds] = useState<string[]>([]);
 
-  const loadRecommendation = async (nextType = type) => {
+  const rememberRecommendation = (nextRecommendation: Recommendation) => {
+    setRecommendation(nextRecommendation);
+    if (nextRecommendation.id) {
+      setShownIds((current) => [...current.filter((id) => id !== nextRecommendation.id), nextRecommendation.id].slice(-5));
+    }
+  };
+
+  const loadRecommendation = async (nextType = type, resetHistory = false) => {
     setLoading(true);
     setSaved(false);
-    const localRecommendation = getRecommendation(entries, nextType === "eat" ? "food" : "drink");
+    const excludeIds = resetHistory ? [] : shownIds;
+    const localRecommendation = getRecommendation(entries, nextType === "eat" ? "food" : "drink", { excludeIds });
     if (localRecommendation) {
-      setRecommendation(localRecommendation);
+      rememberRecommendation(localRecommendation);
       setLoading(false);
       return;
     }
@@ -115,7 +124,7 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
       });
       const data = await response.json();
       if (data?.recommendation) {
-        setRecommendation(data.recommendation);
+        rememberRecommendation(data.recommendation);
         return;
       }
     } catch (error) {
@@ -124,11 +133,12 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
       setLoading(false);
     }
 
-    setRecommendation(FALLBACKS[nextType][0]);
+    rememberRecommendation(FALLBACKS[nextType][0]);
   };
 
   useEffect(() => {
-    loadRecommendation(type);
+    setShownIds([]);
+    loadRecommendation(type, true);
   }, [type]);
 
   const acceptRecommendation = () => {
@@ -169,7 +179,7 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
           <MagicCard recommendation={recommendation} />
           <RecommendationReason recommendation={recommendation} />
 
-          <div className="fixed left-1/2 bottom-[92px] z-50 w-full max-w-[672px] -translate-x-1/2 px-5 grid grid-cols-2 gap-3 pointer-events-none max-[520px]:bottom-[calc(88px+env(safe-area-inset-bottom))]">
+          <div className="fixed left-1/2 bottom-[92px] z-[60] w-full max-w-[672px] -translate-x-1/2 px-5 grid grid-cols-2 gap-3 pointer-events-none max-[520px]:bottom-[calc(88px+env(safe-area-inset-bottom))]">
             <button onClick={() => loadRecommendation(type)} className="pointer-events-auto h-12 rounded-full bg-white border border-[#dfd6c5] text-sm font-bold text-[#8e9a86] flex items-center justify-center gap-2 shadow-[0_8px_22px_rgba(93,84,73,0.12)]">
               <RotateCw size={17} />
               换一个
