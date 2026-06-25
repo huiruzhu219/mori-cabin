@@ -10,12 +10,12 @@ interface MoodDetailViewProps {
 
 export default function MoodDetailView({ entries, onBack }: MoodDetailViewProps) {
   const sortedEntries = entries.length ? entries : [];
-  const xStep = 104;
-  const chartWidth = Math.max(500, sortedEntries.length * xStep + 92);
+  const xStep = 62;
+  const chartWidth = Math.max(310, sortedEntries.length * xStep + 44);
   const points = sortedEntries.map((entry, index) => ({
     entry,
-    x: 54 + index * xStep,
-    y: 248 - (getMoodScore(entry) - 1) * 42,
+    x: 30 + index * xStep,
+    y: 178 - (getMoodScore(entry) - 1) * 28,
   }));
   const path = buildPath(points);
 
@@ -31,8 +31,8 @@ export default function MoodDetailView({ entries, onBack }: MoodDetailViewProps)
         </div>
       </header>
 
-      <section className="rounded-[24px] bg-white border border-[#ded2bf] p-4 shadow-sm">
-        <div className="flex items-center justify-between gap-3 mb-4">
+      <section className="rounded-[22px] bg-white border border-[#ded2bf] p-4 shadow-sm">
+        <div className="flex items-center justify-between gap-3 mb-3">
           <h2 className="min-w-0 text-base font-bold text-[#8e9a86] flex items-center gap-2">
             <TrendingUp size={18} />
             情绪波动详细曲线
@@ -41,7 +41,7 @@ export default function MoodDetailView({ entries, onBack }: MoodDetailViewProps)
         </div>
 
         <div className="relative rounded-2xl border border-dashed border-[#eadfce] bg-[#fffdf8] p-2 overflow-hidden">
-          <div className="absolute left-2 top-8 bottom-12 z-10 w-6 flex flex-col justify-between text-[13px] font-bold text-[#9f907d]">
+          <div className="absolute left-1.5 top-6 bottom-9 z-10 w-5 flex flex-col justify-between text-[11px] font-bold text-[#9f907d]">
             {SCORE_LABELS.map((item) => (
               <span key={item.score} className="flex flex-col items-center leading-tight">
                 <span>{item.emoji}</span>
@@ -49,35 +49,35 @@ export default function MoodDetailView({ entries, onBack }: MoodDetailViewProps)
             ))}
           </div>
 
-          <div className="ml-7 overflow-x-auto no-scrollbar pb-2">
-            <div className="relative h-[292px]" style={{ width: chartWidth }}>
-              <div className="absolute inset-x-0 top-8 bottom-14 flex flex-col justify-between">
+          <div className="ml-6 overflow-x-auto no-scrollbar pb-1">
+            <div className="relative h-[212px]" style={{ width: chartWidth }}>
+              <div className="absolute inset-x-0 top-6 bottom-10 flex flex-col justify-between">
                 {SCORE_LABELS.map((item) => (
                   <div key={item.score} className="border-t border-dashed border-[#eee7db]" />
                 ))}
               </div>
 
-              <svg className="absolute inset-0" width={chartWidth} height="292">
-                {path && <path d={path} fill="none" stroke="#aeb9a8" strokeWidth="5" strokeLinecap="round" strokeDasharray="8 8" />}
+              <svg className="absolute inset-0" width={chartWidth} height="212">
+                {path && <path d={path} fill="none" stroke="#aeb9a8" strokeWidth="4" strokeLinecap="round" strokeDasharray="7 7" />}
                 {points.map((point) => (
-                  <line key={point.entry.id} x1={point.x} y1={point.y + 34} x2={point.x} y2="252" stroke="#eadfce" strokeDasharray="4 6" />
+                  <line key={point.entry.id} x1={point.x} y1={point.y + 25} x2={point.x} y2="184" stroke="#eadfce" strokeDasharray="4 6" />
                 ))}
               </svg>
 
               {points.map(({ entry, x, y }) => (
                 <button key={entry.id} className="absolute flex flex-col items-center -translate-x-1/2 -translate-y-1/2" style={{ left: x, top: y }}>
-                  <span className="w-[54px] h-[54px] rounded-full bg-white border border-[#dfd6c5] shadow-[0_5px_14px_rgba(93,84,73,0.08)] flex items-center justify-center text-[30px]">
+                  <span className="w-10 h-10 rounded-full bg-white border border-[#dfd6c5] shadow-[0_5px_14px_rgba(93,84,73,0.08)] flex items-center justify-center text-[23px]">
                     {entry.mood}
                   </span>
-                  <span className="mt-1 rounded-md bg-white/90 px-2 py-0.5 text-base font-bold text-[#9f907d]">{formatDate(entry.date)}</span>
-                  <span className="text-xs text-[#b5aa9a]">{entry.dayOfWeek}</span>
+                  <span className="mt-1 rounded-md bg-white/90 px-1.5 py-0.5 text-xs font-bold text-[#9f907d]">{formatDate(entry.date)}</span>
+                  <span className="text-[10px] text-[#b5aa9a]">{entry.dayOfWeek}</span>
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        <p className="mt-7 text-center text-base text-[#a0907d] italic font-serif">← 左右滑动查阅历史完整轨迹（可点击各心情圆点） →</p>
+        <p className="mt-4 text-center text-sm text-[#a0907d] italic font-serif">← 左右滑动查阅完整轨迹 →</p>
       </section>
 
       <section className="space-y-4">

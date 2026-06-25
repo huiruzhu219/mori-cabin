@@ -47,23 +47,25 @@ export default function MonthSwitcher({ selectedDate, mode, onDateChange }: Mont
   };
 
   return (
-    <section className="relative rounded-[24px] bg-white border border-[#ded2bf] p-3 shadow-sm flex items-center gap-5">
-      <button type="button" onClick={() => move(-1)} className="w-10 h-10 rounded-full flex items-center justify-center text-[#9f907d]">
-        <ChevronLeft size={26} />
+    <section className="relative rounded-[20px] bg-white border border-[#ded2bf] p-2 shadow-sm flex items-center gap-2">
+      <button type="button" onClick={() => move(-1)} className="w-9 h-9 rounded-full flex items-center justify-center text-[#9f907d] flex-shrink-0">
+        <ChevronLeft size={22} />
       </button>
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className="flex-1 h-12 rounded-2xl border border-[#dfd6c5] bg-[#fffdf8] flex items-center justify-between px-5 text-left"
+        className="min-w-0 flex-1 h-11 rounded-2xl border border-[#dfd6c5] bg-[#fffdf8] flex items-center justify-between gap-2 px-3 text-left"
       >
-        <span className="flex items-center gap-3 text-xl font-bold">
-          <Calendar size={21} className="text-[#8e9a86]" />
-          {label}
+        <span className="min-w-0 flex items-center gap-2 text-[18px] font-bold whitespace-nowrap">
+          <Calendar size={18} className="text-[#8e9a86] flex-shrink-0" />
+          <span className="truncate">{label}</span>
         </span>
-        <span className="rounded-full bg-[#eef1eb] px-3 py-1 text-sm font-bold text-[#8e9a86]">{open ? "收起⌃" : mode === "month" ? "年月⌄" : "日期⌄"}</span>
+        <span className="inline-flex h-7 min-w-[54px] flex-shrink-0 items-center justify-center rounded-full bg-[#eef1eb] px-2 text-xs font-bold leading-none text-[#8e9a86] whitespace-nowrap">
+          {open ? "收起⌃" : mode === "month" ? "年月⌄" : "日期⌄"}
+        </span>
       </button>
-      <button type="button" onClick={() => move(1)} className="w-10 h-10 rounded-full flex items-center justify-center text-[#9f907d]">
-        <ChevronRight size={26} />
+      <button type="button" onClick={() => move(1)} className="w-9 h-9 rounded-full flex items-center justify-center text-[#9f907d] flex-shrink-0">
+        <ChevronRight size={22} />
       </button>
 
       {open && (
