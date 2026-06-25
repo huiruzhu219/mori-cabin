@@ -177,13 +177,13 @@ export default function AIInputBox({ value, onChange, hint, isParsing, audioNote
         </div>
       )}
 
-      <div className="mt-4 flex items-center justify-between border-t border-dashed border-[#dfd6c5] pt-3">
-        <p className="text-xs text-[#a0907d]">{voiceHint || hint || "AI 会把一句话整理成心情、吃喝、穿搭和地点；录音会保留当时的语气。"}</p>
+      <div className="mt-4 flex items-center justify-between gap-3 border-t border-dashed border-[#dfd6c5] pt-3">
+        <p className="min-w-0 flex-1 truncate text-xs text-[#a0907d]">{voiceHint || hint || "先写一句今天的小事，再让 AI 帮你整理。"}</p>
         <button
           type="button"
           onClick={onParse}
           disabled={isParsing}
-          className="rounded-full bg-[#8e9a86] px-4 py-2 text-xs font-bold text-white flex items-center gap-1.5 disabled:opacity-60"
+          className="h-10 w-[108px] flex-shrink-0 rounded-full bg-[#8e9a86] px-4 text-sm font-bold text-white flex items-center justify-center gap-1.5 whitespace-nowrap disabled:opacity-60"
         >
           {isParsing ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
           AI解析

@@ -10,46 +10,46 @@ interface MoodDetailViewProps {
 
 export default function MoodDetailView({ entries, onBack }: MoodDetailViewProps) {
   const sortedEntries = entries.length ? entries : [];
-  const xStep = 110;
-  const chartWidth = Math.max(560, sortedEntries.length * xStep + 120);
+  const xStep = 104;
+  const chartWidth = Math.max(500, sortedEntries.length * xStep + 92);
   const points = sortedEntries.map((entry, index) => ({
     entry,
-    x: 78 + index * xStep,
+    x: 54 + index * xStep,
     y: 248 - (getMoodScore(entry) - 1) * 42,
   }));
   const path = buildPath(points);
 
   return (
-    <div className="space-y-8 pb-8">
-      <header className="flex items-start gap-4">
-        <button onClick={onBack} className="mt-1 w-[54px] h-[54px] rounded-full bg-white border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm">
-          <ArrowLeft size={26} />
+    <div className="space-y-5 pb-8">
+      <header className="flex items-start gap-3">
+        <button onClick={onBack} className="mt-1 w-12 h-12 rounded-full bg-white border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm flex-shrink-0">
+          <ArrowLeft size={23} />
         </button>
-        <div>
-          <h1 className="text-[24px] font-bold font-serif tracking-wide">回看 · 情绪起伏 🍃</h1>
+        <div className="min-w-0">
+          <h1 className="text-[24px] font-bold font-serif tracking-wide max-[380px]:text-[21px]">回看 · 情绪起伏 🍃</h1>
           <p className="mt-1 text-sm text-[#a0907d] font-serif">“浮生慢日，倾听心底细碎的回响”</p>
         </div>
       </header>
 
-      <section className="rounded-[24px] bg-white border border-[#ded2bf] p-5 shadow-sm">
-        <div className="flex items-center justify-between mb-7">
-          <h2 className="text-lg font-bold text-[#8e9a86] flex items-center gap-2">
+      <section className="rounded-[24px] bg-white border border-[#ded2bf] p-4 shadow-sm">
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <h2 className="min-w-0 text-base font-bold text-[#8e9a86] flex items-center gap-2">
             <TrendingUp size={18} />
             情绪波动详细曲线
           </h2>
-          <span className="rounded-full bg-[#eef1eb] px-4 py-1.5 text-sm font-bold text-[#8e9a86]">{sortedEntries.length} 次记录</span>
+          <span className="flex-shrink-0 rounded-full bg-[#eef1eb] px-3 py-1 text-sm font-bold text-[#8e9a86]">{sortedEntries.length} 次记录</span>
         </div>
 
-        <div className="relative rounded-2xl border border-dashed border-[#eadfce] bg-[#fffdf8] p-5 overflow-hidden">
-          <div className="absolute left-5 top-9 bottom-16 w-[62px] flex flex-col justify-between text-xs font-bold text-[#9f907d]">
+        <div className="relative rounded-2xl border border-dashed border-[#eadfce] bg-[#fffdf8] p-2 overflow-hidden">
+          <div className="absolute left-2 top-8 bottom-12 z-10 w-6 flex flex-col justify-between text-[13px] font-bold text-[#9f907d]">
             {SCORE_LABELS.map((item) => (
-              <span key={item.score}>
-                {item.emoji} {item.label}
+              <span key={item.score} className="flex flex-col items-center leading-tight">
+                <span>{item.emoji}</span>
               </span>
             ))}
           </div>
 
-          <div className="ml-[72px] overflow-x-auto no-scrollbar pb-2">
+          <div className="ml-7 overflow-x-auto no-scrollbar pb-2">
             <div className="relative h-[292px]" style={{ width: chartWidth }}>
               <div className="absolute inset-x-0 top-8 bottom-14 flex flex-col justify-between">
                 {SCORE_LABELS.map((item) => (
