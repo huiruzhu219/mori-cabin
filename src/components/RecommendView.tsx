@@ -139,44 +139,44 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
   };
 
   return (
-    <div className="space-y-8 pb-8">
+    <div className="space-y-4 pb-28">
       <header className="flex justify-between items-center gap-3">
         <div className="flex items-center gap-4 min-w-0">
           <AvatarImage
             src={userProfile?.avatar || "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=200&auto=format&fit=crop"}
             name={userProfile?.name || "小葵"}
-            className="w-12 h-12 rounded-full object-cover border border-[#dfd6c5] shadow-sm flex-shrink-0 max-[380px]:w-10 max-[380px]:h-10"
+            className="w-11 h-11 rounded-full object-cover border border-[#dfd6c5] shadow-sm flex-shrink-0"
           />
-          <h1 className="text-[24px] leading-tight font-bold font-serif tracking-wide min-w-0 break-words max-[520px]:text-[20px] max-[380px]:text-[18px]">选择困难终结者</h1>
+          <h1 className="text-[20px] leading-tight font-bold font-serif tracking-wide min-w-0 truncate">选择困难终结者</h1>
         </div>
-        <button onClick={() => onNavigate?.("settings")} className="w-[54px] h-[54px] rounded-full bg-white border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm flex-shrink-0 max-[380px]:w-11 max-[380px]:h-11">
-          <Settings size={25} strokeWidth={1.8} />
+        <button onClick={() => onNavigate?.("settings")} className="w-11 h-11 rounded-full bg-white border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm flex-shrink-0">
+          <Settings size={20} strokeWidth={1.8} />
         </button>
       </header>
 
-      <section className="text-center space-y-5 pt-6">
-        <h2 className="text-[26px] font-bold font-serif tracking-wide max-[520px]:text-[22px] max-[380px]:text-[20px]">今天吃点/喝点什么？ ☘</h2>
+      <section className="text-center space-y-3 pt-1">
+        <h2 className="text-[22px] font-bold font-serif tracking-wide">今天吃点/喝点什么？ ☘</h2>
         <RecommendToggle type={type} onChange={setType} />
       </section>
 
       {loading || !recommendation ? (
-        <div className="h-80 flex flex-col items-center justify-center gap-3 text-[#a0907d]">
+        <div className="h-60 flex flex-col items-center justify-center gap-3 text-[#a0907d]">
           <div className="w-8 h-8 rounded-full border-2 border-[#8e9a86] border-t-transparent animate-spin" />
           <p className="text-xs">正在翻找你的生活偏好...</p>
         </div>
       ) : (
-        <section className="space-y-8">
+        <section className="space-y-4">
           <MagicCard recommendation={recommendation} />
           <RecommendationReason recommendation={recommendation} />
 
-          <div className="space-y-5">
-            <button onClick={acceptRecommendation} className="w-full h-[60px] rounded-full bg-[#8e9a86] py-3 text-xl font-bold text-white flex items-center justify-center gap-3 shadow-sm max-[380px]:text-base">
-              {saved ? <Check size={22} /> : <Bookmark size={22} />}
-              {saved ? "已加入今日记录 ✨" : "就决定是它了！ ✨"}
+          <div className="fixed left-1/2 bottom-[92px] z-50 w-full max-w-[672px] -translate-x-1/2 px-5 grid grid-cols-2 gap-3 pointer-events-none max-[520px]:bottom-[86px]">
+            <button onClick={() => loadRecommendation(type)} className="pointer-events-auto h-12 rounded-full bg-white border border-[#dfd6c5] text-sm font-bold text-[#8e9a86] flex items-center justify-center gap-2 shadow-[0_8px_22px_rgba(93,84,73,0.12)]">
+              <RotateCw size={17} />
+              换一个
             </button>
-            <button onClick={() => loadRecommendation(type)} className="w-full h-[60px] rounded-full bg-white border border-[#dfd6c5] py-3 text-xl font-bold text-[#8e9a86] flex items-center justify-center gap-3 shadow-sm max-[380px]:text-base">
-              <RotateCw size={20} />
-              不中意，再转一次 🍀
+            <button onClick={acceptRecommendation} className="pointer-events-auto h-12 rounded-full bg-[#8e9a86] text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_22px_rgba(142,154,134,0.32)]">
+              {saved ? <Check size={22} /> : <Bookmark size={22} />}
+              {saved ? "已记录" : "就它了"}
             </button>
           </div>
         </section>

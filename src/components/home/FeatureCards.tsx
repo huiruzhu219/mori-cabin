@@ -1,4 +1,4 @@
-import { BarChart2, BookOpen, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { ActiveTab } from "../../types";
 
 interface FeatureCardsProps {
@@ -7,22 +7,17 @@ interface FeatureCardsProps {
 
 export default function FeatureCards({ onNavigate }: FeatureCardsProps) {
   return (
-    <section className="grid grid-cols-2 gap-3">
-      <button onClick={() => onNavigate("recommend")} className="h-36 rounded-2xl bg-white border border-[#dfd6c5] p-4 text-left shadow-sm rotate-[-1deg]">
-        <Sparkles size={18} className="text-[#e3a387]" />
-        <h3 className="mt-3 text-sm font-bold">帮我选一个</h3>
-        <p className="mt-1 text-[10px] text-[#a0907d]">吃什么喝什么都可以交给小屋</p>
+    <section>
+      <button onClick={() => onNavigate("recommend")} className="w-full min-h-[92px] rounded-[22px] bg-white border border-[#dfd6c5] p-4 text-left shadow-sm rotate-[-0.6deg] flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#fff3ec] px-3 py-1 text-[11px] font-bold text-[#c86f50]">
+            <Sparkles size={13} /> 今日推荐
+          </span>
+          <h3 className="mt-2 text-base font-bold">帮我选一个</h3>
+          <p className="mt-1 text-xs text-[#a0907d] truncate">从你的记录和心动清单里抽一个惊喜</p>
+        </div>
+        <span className="flex-shrink-0 rounded-full bg-[#8e9a86] px-4 py-2 text-xs font-bold text-white">去看看</span>
       </button>
-      <div className="space-y-3">
-        <button onClick={() => onNavigate("memory")} className="w-full h-[66px] rounded-2xl bg-white border border-[#dfd6c5] p-3 text-left shadow-sm">
-          <BookOpen size={16} className="text-[#8e9a86]" />
-          <span className="block mt-1 text-xs font-bold">生活回忆册</span>
-        </button>
-        <button onClick={() => onNavigate("memory")} className="w-full h-[66px] rounded-2xl bg-[#f7fbfa] border border-[#d7e7e3] p-3 text-left shadow-sm">
-          <BarChart2 size={16} className="text-[#6f9b91]" />
-          <span className="block mt-1 text-xs font-bold">今日统计</span>
-        </button>
-      </div>
     </section>
   );
 }

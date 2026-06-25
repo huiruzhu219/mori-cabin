@@ -15,13 +15,13 @@ interface QuickActionsProps {
 
 export default function QuickActions({ onNavigate }: QuickActionsProps) {
   return (
-    <section className="flex justify-between items-start gap-4 py-1 max-[520px]:gap-2">
+    <section className="grid grid-cols-3 justify-items-center gap-x-3 gap-y-3 py-1 max-w-[360px] mx-auto">
       {QUICK_ACTIONS.map(({ label, icon: Icon, color, ring }) => (
         <button key={label} onClick={() => onNavigate("record")} className="flex flex-col items-center gap-3 min-w-0 group">
-          <span className={`w-[58px] h-[58px] rounded-full bg-white border ${ring} flex items-center justify-center shadow-[0_4px_12px_rgba(93,84,73,0.06)] transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_8px_18px_rgba(93,84,73,0.1)] max-[520px]:w-12 max-[520px]:h-12 ${color}`}>
-            <Icon size={28} strokeWidth={1.8} className="max-[520px]:w-5 max-[520px]:h-5" />
+          <span className={`w-12 h-12 rounded-full bg-white border ${ring} flex items-center justify-center shadow-[0_4px_12px_rgba(93,84,73,0.06)] transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_8px_18px_rgba(93,84,73,0.1)] ${color}`}>
+            <Icon size={21} strokeWidth={1.8} />
           </span>
-          <span className="text-base font-medium text-[#7a6b4c] whitespace-nowrap max-[520px]:text-[11px]">{label}</span>
+          <span className="text-[12px] font-medium text-[#7a6b4c] whitespace-nowrap">{label}</span>
         </button>
       ))}
     </section>

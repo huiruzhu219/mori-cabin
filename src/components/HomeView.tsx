@@ -18,15 +18,15 @@ export default function HomeView({ onNavigate, todayEntry, userProfile, onLogout
   const [showSummary, setShowSummary] = useState(false);
 
   return (
-    <div className="space-y-7 pb-4">
+    <div className="space-y-4 pb-4">
       <header className="flex justify-between items-start">
-        <div>
-          <h1 className="text-[26px] leading-none font-bold font-serif">今天也很好</h1>
-          <p className="text-sm text-[#a0907d] mt-2">Hi，{userProfile?.name || "小葵"} 🌻 今天也很好</p>
+        <div className="min-w-0">
+          <h1 className="text-[24px] leading-none font-bold font-serif">今天也很好</h1>
+          <p className="text-sm text-[#a0907d] mt-2 truncate">Hi，{userProfile?.name || "小葵"} 🌻 今天也很好</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button className="w-11 h-11 rounded-full bg-white border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm">
-            <Bell size={20} strokeWidth={1.8} />
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <button className="w-10 h-10 rounded-full bg-white border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm">
+            <Bell size={18} strokeWidth={1.8} />
           </button>
           <button onClick={onLogout} className="text-xs text-[#a0907d] underline">
             退出
@@ -35,9 +35,9 @@ export default function HomeView({ onNavigate, todayEntry, userProfile, onLogout
       </header>
 
       <HeroHouse onOpenSummary={() => setShowSummary(true)} />
+      <ProgressCard todayEntry={todayEntry} />
       <QuickActions onNavigate={onNavigate} />
       <FeatureCards onNavigate={onNavigate} />
-      <ProgressCard todayEntry={todayEntry} />
 
       {showSummary && (
         <div className="fixed inset-0 z-[80] bg-[#5d5449]/40 backdrop-blur-sm flex items-center justify-center p-5">

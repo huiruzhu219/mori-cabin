@@ -1,4 +1,3 @@
-import { Heart, RotateCw } from "lucide-react";
 import { Recommendation } from "../../types";
 
 interface RecommendationReasonProps {
@@ -7,20 +6,10 @@ interface RecommendationReasonProps {
 
 export default function RecommendationReason({ recommendation }: RecommendationReasonProps) {
   return (
-    <div className="relative rounded-2xl bg-white border border-[#ded2bf] p-10 shadow-sm text-center max-[520px]:p-7 max-[380px]:p-5">
-      <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-[#8e9a86] px-6 py-1.5 text-sm font-bold text-white shadow-sm">
-        小屋推荐推荐物语 🌸
-      </div>
-      <p className="text-[17px] leading-9 text-[#6d6358] font-serif">“{recommendation.reason}”</p>
-      <div className="my-7 border-t border-dashed border-[#dfd6c5]" />
-      <div className="flex justify-between text-base font-bold text-[#a0907d] gap-3 max-[380px]:flex-col max-[380px]:items-center max-[380px]:text-sm">
-        <span className="flex items-center gap-2">
-          <RotateCw size={16} /> 最近品尝: {recommendation.lastTried}
-        </span>
-        <span className="flex items-center gap-2">
-          <Heart size={16} className="text-[#e3a387]" /> 历史评价: {recommendation.historyEval}
-        </span>
-      </div>
+    <div className="rounded-2xl bg-white border border-[#ded2bf] px-4 py-3 shadow-sm">
+      <p className="truncate text-sm font-bold text-[#7a6b4c]">
+        因为你最近喜欢{recommendation.tag} + 评分较高
+      </p>
     </div>
   );
 }
