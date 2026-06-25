@@ -149,23 +149,25 @@ function ItemEditor({
           </button>
         )}
       </div>
-      <ImagePicker image={item.image} label={imageLabel} onChange={(image) => onChange({ image })} className="w-full h-[132px] max-[380px]:h-[118px]" />
-      <div className="mt-3 min-w-0 space-y-2">
-        <div className="flex gap-2">
+      <div className="flex gap-3 items-start">
+        <ImagePicker image={item.image} label={imageLabel} onChange={(image) => onChange({ image })} className="w-[104px] h-[104px] flex-shrink-0 max-[380px]:w-[88px] max-[380px]:h-[88px]" />
+        <div className="flex-1 min-w-0 space-y-2 pt-1">
+          <div className="flex gap-2">
+            <input
+              value={item.name}
+              onChange={(event) => onChange({ name: event.target.value })}
+              placeholder={namePlaceholder}
+              className="min-w-0 flex-1 border-b border-[#dfd6c5] bg-transparent pb-1 text-[15px] font-bold outline-none placeholder:text-[#b8ad9f]"
+            />
+          </div>
+          <Stars value={item.rating || 4} onChange={(rating) => onChange({ rating })} />
           <input
-            value={item.name}
-            onChange={(event) => onChange({ name: event.target.value })}
-            placeholder={namePlaceholder}
-            className="min-w-0 flex-1 border-b border-[#dfd6c5] bg-transparent pb-1 text-[15px] font-bold outline-none placeholder:text-[#b8ad9f]"
+            value={item.note || ""}
+            onChange={(event) => onChange({ note: event.target.value })}
+            placeholder={notePlaceholder}
+            className="w-full bg-transparent text-xs text-[#8a7d70] outline-none placeholder:text-[#b8ad9f]"
           />
         </div>
-        <Stars value={item.rating || 4} onChange={(rating) => onChange({ rating })} />
-        <input
-          value={item.note || ""}
-          onChange={(event) => onChange({ note: event.target.value })}
-          placeholder={notePlaceholder}
-          className="w-full bg-transparent text-xs text-[#8a7d70] outline-none placeholder:text-[#b8ad9f]"
-        />
       </div>
     </article>
   );
@@ -403,8 +405,8 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
       >
         {wishlistEnabled ? (
           <div className="space-y-3">
-            <div className="flex gap-3">
-              <ImagePicker image={wishlistImage} label="心动照片" onChange={setWishlistImage} className="w-[92px] h-[92px]" />
+            <div className="flex gap-3 items-start">
+              <ImagePicker image={wishlistImage} label="心动照片" onChange={setWishlistImage} className="w-[104px] h-[104px] flex-shrink-0 max-[380px]:w-[88px] max-[380px]:h-[88px]" />
               <div className="flex-1 min-w-0 space-y-2">
                 <div className="inline-flex rounded-full border border-[#dfd6c5] bg-[#fffdf8] p-1">
                   <button type="button" onClick={() => setWishlistType("food")} className={`rounded-full px-3 py-1 text-xs font-bold ${wishlistType === "food" ? "bg-[#e3a387] text-white" : "text-[#8a7d70]"}`}>想吃</button>
@@ -452,11 +454,13 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
       </section>
 
       <JournalCard title="今日着物" subtitle="OUTFIT" icon={<Shirt size={18} strokeWidth={1.8} />}>
-        <ImagePicker image={outfitImage} label="穿搭照片" onChange={setOutfitImage} className="w-full h-[132px] max-[380px]:h-[118px]" />
-        <div className="mt-3 space-y-2">
+        <div className="flex gap-3 items-start">
+          <ImagePicker image={outfitImage} label="穿搭照片" onChange={setOutfitImage} className="w-[104px] h-[104px] flex-shrink-0 max-[380px]:w-[88px] max-[380px]:h-[88px]" />
+          <div className="flex-1 min-w-0 space-y-2 pt-1">
             <input value={outfitText} onChange={(event) => setOutfitText(event.target.value)} placeholder="例如：松弛感穿搭" className="w-full border-b border-[#dfd6c5] bg-transparent pb-1 text-[15px] font-bold outline-none placeholder:text-[#b8ad9f]" />
             <Stars value={outfitRating} onChange={setOutfitRating} />
             <input value={outfitNote} onChange={(event) => setOutfitNote(event.target.value)} placeholder="给今天的穿搭写一句话..." className="w-full bg-transparent text-xs text-[#8a7d70] outline-none placeholder:text-[#b8ad9f]" />
+          </div>
         </div>
       </JournalCard>
 

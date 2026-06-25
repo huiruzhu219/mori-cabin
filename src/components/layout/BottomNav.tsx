@@ -1,11 +1,11 @@
-import { BookOpen, Edit3, Home, Plus, Settings, UtensilsCrossed } from "lucide-react";
+import { BookOpen, Home, Plus, Settings, UtensilsCrossed } from "lucide-react";
 import { ActiveTab } from "../../types";
 
-const NAV_ITEMS: Array<{ key: ActiveTab; label: string; icon: typeof Home }> = [
+const SIDE_TABS: Array<{ key: ActiveTab; label: string; icon: typeof Home }> = [
   { key: "home", label: "首页", icon: Home },
-  { key: "record", label: "记录", icon: Edit3 },
   { key: "memory", label: "回忆", icon: BookOpen },
   { key: "recommend", label: "推荐", icon: UtensilsCrossed },
+  { key: "settings", label: "设置", icon: Settings },
 ];
 
 interface BottomNavProps {
@@ -14,49 +14,45 @@ interface BottomNavProps {
 }
 
 export default function BottomNav({ activeTab, onNavigate }: BottomNavProps) {
+  const renderTab = (item: (typeof SIDE_TABS)[number]) => {
+    const active = activeTab === item.key;
+    const Icon = item.icon;
+    return (
+      <button
+        key={item.key}
+        onClick={() => onNavigate(item.key)}
+        className={`flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors max-[520px]:py-1.5 ${
+          active ? "text-[#8e9a86]" : "text-[#aa9d8d]"
+        }`}
+      >
+        <Icon size={23} strokeWidth={active ? 2.2 : 1.8} className="max-[520px]:h-[21px] max-[520px]:w-[21px]" />
+        <span className={`text-[13px] leading-none max-[520px]:text-[11px] ${active ? "font-bold" : "font-medium"}`}>
+          {item.label}
+        </span>
+      </button>
+    );
+  };
+
   return (
-    <nav className="bg-white/96 backdrop-blur-md border border-[#eadfd0] h-[104px] px-14 fixed md:absolute bottom-0 left-0 right-0 z-50 flex justify-between items-center rounded-t-[24px] rounded-b-[42px] shadow-[0_-8px_28px_rgba(93,84,73,0.08)] max-[520px]:h-[86px] max-[520px]:px-2 max-[520px]:rounded-t-[22px] max-[520px]:rounded-b-[28px]">
-      {NAV_ITEMS.slice(0, 2).map(({ key, label, icon: Icon }) => (
-        <button
-          key={key}
-          onClick={() => onNavigate(key)}
-          className={`w-[74px] h-[72px] flex flex-col items-center justify-center rounded-full transition-all max-[520px]:w-[52px] max-[520px]:h-[56px] ${
-            activeTab === key ? "bg-[#f1f3ee] border border-[#e2e5de] text-[#8e9a86] font-bold" : "text-[#aa9d8d]"
-          }`}
-        >
-          <Icon size={25} strokeWidth={1.8} className="max-[520px]:w-5 max-[520px]:h-5" />
-          <span className="text-base mt-1 max-[520px]:text-[11px] max-[520px]:leading-none">{label}</span>
-        </button>
-      ))}
-
-      <button
-        onClick={() => onNavigate("record")}
-        className="w-[66px] h-[66px] bg-[#e3a387] hover:bg-[#df9371] text-white rounded-full flex items-center justify-center shadow-[0_7px_20px_rgba(227,163,135,0.48)] active:scale-95 -translate-y-8 border-[4px] border-white max-[520px]:w-[54px] max-[520px]:h-[54px] max-[520px]:-translate-y-7 max-[520px]:border-[3px]"
-        title="快速新增"
-      >
-        <Plus size={34} strokeWidth={2.6} className="max-[520px]:w-7 max-[520px]:h-7" />
-      </button>
-
-      {NAV_ITEMS.slice(2).map(({ key, label, icon: Icon }) => (
-        <button
-          key={key}
-          onClick={() => onNavigate(key)}
-          className={`w-[74px] h-[72px] flex flex-col items-center justify-center rounded-full transition-all max-[520px]:w-[52px] max-[520px]:h-[56px] ${
-            activeTab === key ? "bg-[#f1f3ee] border border-[#e2e5de] text-[#8e9a86] font-bold" : "text-[#aa9d8d]"
-          }`}
-        >
-          <Icon size={25} strokeWidth={1.8} className="max-[520px]:w-5 max-[520px]:h-5" />
-          <span className="text-base mt-1 max-[520px]:text-[11px] max-[520px]:leading-none">{label}</span>
-        </button>
-      ))}
-
-      <button
-        onClick={() => onNavigate("settings")}
-        className="absolute right-3 -top-11 w-8 h-8 bg-white border border-[#dfd6c5] rounded-full flex items-center justify-center text-[#a0907d] shadow-sm"
-        title="设置"
-      >
-        <Settings size={15} />
-      </button>
+    <nav className="fixed md:absolute bottom-0 left-0 right-0 z-50">
+      <div className="mx-auto max-w-[672px] bg-white/95 backdrop-blur-md border-t border-[#eadfd0] rounded-t-[24px] shadow-[0_-6px_24px_rgba(93,84,73,0.1)] px-2 pt-2 pb-[calc(env(safe-area-inset-bottom)+8px)] max-[520px]:rounded-t-[20px]">
+        <div className="flex items-end">
+          {renderTab(SIDE_TABS[0])}
+          {renderTab(SIDE_TABS[1])}
+          <div className="flex flex-1 flex-col items-center justify-end pb-1">
+            <button
+              onClick={() => onNavigate("record")}
+              className="-mt-7 h-[56px] w-[56px] rounded-full bg-[#e3a387] text-white flex items-center justify-center shadow-[0_6px_18px_rgba(227,163,135,0.45)] active:scale-95 border-[3px] border-white transition-transform max-[520px]:h-[48px] max-[520px]:w-[48px] max-[520px]:-mt-6"
+              title="快速记录"
+            >
+              <Plus size={28} strokeWidth={2.6} className="max-[520px]:h-6 max-[520px]:w-6" />
+            </button>
+            <span className="mt-1 text-[11px] leading-none text-[#aa9d8d] max-[520px]:hidden">记录</span>
+          </div>
+          {renderTab(SIDE_TABS[2])}
+          {renderTab(SIDE_TABS[3])}
+        </div>
+      </div>
     </nav>
   );
 }

@@ -6,9 +6,10 @@ import { buildPath, formatDate, getMoodScore, SCORE_LABELS, weekdayName } from "
 interface MoodDetailViewProps {
   entries: JournalEntry[];
   onBack: () => void;
+  onSelectDate?: (date: string) => void;
 }
 
-export default function MoodDetailView({ entries, onBack }: MoodDetailViewProps) {
+export default function MoodDetailView({ entries, onBack, onSelectDate }: MoodDetailViewProps) {
   const sortedEntries = entries.length ? entries : [];
   const xStep = 62;
   const chartWidth = Math.max(310, sortedEntries.length * xStep + 44);
@@ -83,7 +84,11 @@ export default function MoodDetailView({ entries, onBack }: MoodDetailViewProps)
       <section className="space-y-4">
         <h2 className="text-lg font-bold text-[#8e9a86] font-serif">细碎的生活流影 · DIARY LOGS</h2>
         {[...sortedEntries].reverse().map((entry) => (
-          <button key={entry.id} className="w-full rounded-[22px] bg-white border border-[#8e9a86] border-l-[6px] p-6 text-left shadow-sm flex items-center justify-between gap-5">
+          <button
+            key={entry.id}
+            onClick={() => onSelectDate?.(entry.date)}
+            className="w-full rounded-[22px] bg-white border border-[#8e9a86] border-l-[6px] p-6 text-left shadow-sm flex items-center justify-between gap-5 transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(93,84,73,0.08)] active:scale-[0.99]"
+          >
             <div className="min-w-0">
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-lg font-bold font-serif">{entry.date.replace(/-/g, "/")}</span>

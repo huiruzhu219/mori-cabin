@@ -67,7 +67,7 @@ export default function MemoryView({ entries, onNavigate, userProfile }: MemoryV
   };
 
   if (mode === "moodDetail") {
-    return <MoodDetailView entries={visibleEntries} onBack={() => setMode("month")} />;
+    return <MoodDetailView entries={visibleEntries} onBack={() => setMode("month")} onSelectDate={(date) => { setSelectedDate(new Date(date)); setMode("day"); }} />;
   }
 
   return (

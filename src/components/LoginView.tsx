@@ -28,7 +28,7 @@ export default function LoginView({ onLoginSuccess }: LoginViewProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center px-6 py-10 text-[#5d5449] bg-[#fcf9f2]">
+    <div className="min-h-[100dvh] flex flex-col justify-center px-6 pt-[calc(2.5rem+env(safe-area-inset-top))] pb-10 text-[#5d5449] bg-[#fcf9f2]">
       <div className="text-center mb-9">
         <div className="w-20 h-20 mx-auto rounded-full bg-[#8e9a86]/12 border border-[#dfd6c5] flex items-center justify-center mb-4">
           <Flower size={34} className="text-[#8e9a86]" />

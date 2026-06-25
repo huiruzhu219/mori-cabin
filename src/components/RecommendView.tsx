@@ -169,7 +169,7 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
           <MagicCard recommendation={recommendation} />
           <RecommendationReason recommendation={recommendation} />
 
-          <div className="fixed left-1/2 bottom-[92px] z-50 w-full max-w-[672px] -translate-x-1/2 px-5 grid grid-cols-2 gap-3 pointer-events-none max-[520px]:bottom-[86px]">
+          <div className="fixed left-1/2 bottom-[92px] z-50 w-full max-w-[672px] -translate-x-1/2 px-5 grid grid-cols-2 gap-3 pointer-events-none max-[520px]:bottom-[calc(88px+env(safe-area-inset-bottom))]">
             <button onClick={() => loadRecommendation(type)} className="pointer-events-auto h-12 rounded-full bg-white border border-[#dfd6c5] text-sm font-bold text-[#8e9a86] flex items-center justify-center gap-2 shadow-[0_8px_22px_rgba(93,84,73,0.12)]">
               <RotateCw size={17} />
               换一个
