@@ -95,24 +95,24 @@ export default function LocationPicker({ location, locations, onLocationChange, 
   };
 
   return (
-    <article className="rounded-[24px] bg-white border border-[#dfd6c5] p-7 shadow-[0_5px_14px_rgba(93,84,73,0.05)] max-[520px]:p-5 max-[380px]:p-4">
-      <div className="mb-5 flex items-start justify-between gap-4 max-[380px]:flex-col">
-        <h3 className="text-[20px] font-bold font-serif text-[#8e9a86] flex items-center gap-2 max-[380px]:text-[17px]">
-          <MapPin size={21} strokeWidth={1.9} />
+    <article className="rounded-[22px] bg-white border border-[#dfd6c5] p-4 shadow-[0_5px_14px_rgba(93,84,73,0.05)]">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h3 className="min-w-0 text-[16px] font-bold font-serif text-[#8e9a86] flex items-center gap-2">
+          <MapPin size={18} strokeWidth={1.9} />
           停留之地 · LOCATION
         </h3>
         <button
           type="button"
           onClick={locateCurrentPosition}
           disabled={isLocating}
-          className="rounded-full bg-[#8e9a86] px-4 py-2 text-sm font-bold text-white shadow-sm flex items-center gap-2 disabled:opacity-60 max-[380px]:w-full max-[380px]:justify-center"
+          className="flex-shrink-0 rounded-full bg-[#8e9a86] px-4 py-1.5 text-xs font-bold text-white shadow-sm flex items-center gap-2 disabled:opacity-60"
         >
           <LocateFixed size={16} className={isLocating ? "animate-pulse" : ""} />
           {isLocating ? "定位中" : "添加定位"}
         </button>
       </div>
 
-      <div className="relative h-48 rounded-[18px] overflow-hidden border border-[#dfd6c5] bg-[#f4efe8] max-[380px]:h-44">
+      <div className="relative h-[150px] rounded-[18px] overflow-hidden border border-[#dfd6c5] bg-[#f4efe8] max-[380px]:h-[132px]">
         <div className="absolute inset-0 opacity-70 bg-[linear-gradient(30deg,transparent_0_42%,#e3d5bf_42%_45%,transparent_45%_100%),linear-gradient(145deg,transparent_0_55%,#d8e0d2_55%_58%,transparent_58%_100%),radial-gradient(circle_at_30%_32%,#e8d9bd_0_12%,transparent_13%),radial-gradient(circle_at_75%_70%,#dbe4d7_0_14%,transparent_15%)]" />
         <div className="absolute inset-0 paper-texture opacity-35" />
         <div className="absolute inset-0 bg-gradient-to-t from-white/85 via-white/20 to-transparent" />
@@ -122,21 +122,21 @@ export default function LocationPicker({ location, locations, onLocationChange, 
             onLocationChange("");
             setStatus("");
           }}
-          className="absolute right-4 top-4 w-10 h-10 rounded-full bg-white/95 border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm"
+          className="absolute right-3 top-3 w-8 h-8 rounded-full bg-white/95 border border-[#dfd6c5] flex items-center justify-center text-[#8e9a86] shadow-sm"
         >
           <X size={16} />
         </button>
-        <div className="absolute left-1/2 top-1/2 w-[82%] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white/95 border border-[#dfd6c5] p-3 shadow-sm max-[380px]:w-[88%]">
+        <div className="absolute left-1/2 top-1/2 w-[82%] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white/95 border border-[#dfd6c5] p-2.5 shadow-sm max-[380px]:w-[88%]">
           <input
             value={location}
             onChange={(event) => onLocationChange(event.target.value)}
             placeholder="例如：静安公园 / 今天经过的小路"
-            className="w-full bg-transparent text-base font-bold text-[#5d5449] text-center outline-none placeholder:text-[#b5aa9a]"
+            className="w-full bg-transparent text-sm font-bold text-[#5d5449] text-center outline-none placeholder:text-[#b5aa9a]"
           />
           <button
             type="button"
             onClick={addManualLocation}
-            className="mx-auto mt-3 rounded-full border border-[#dfd6c5] bg-[#fffdf8] px-4 py-1.5 text-sm font-bold text-[#8e9a86] flex items-center gap-1.5"
+            className="mx-auto mt-2 rounded-full border border-[#dfd6c5] bg-[#fffdf8] px-3 py-1 text-xs font-bold text-[#8e9a86] flex items-center gap-1.5"
           >
             <Plus size={14} />
             加入今日停留
@@ -144,7 +144,7 @@ export default function LocationPicker({ location, locations, onLocationChange, 
         </div>
       </div>
 
-      <div className="mt-4 min-h-5 text-sm text-[#a0907d]">{status}</div>
+      <div className="mt-3 min-h-4 text-xs text-[#a0907d]">{status}</div>
 
       {locations.length > 0 && (
         <div className="mt-3 space-y-2">

@@ -1,5 +1,5 @@
 import { ReactNode, useRef, useState } from "react";
-import { Bookmark, Camera, ChevronDown, ChevronLeft, Coffee, Heart, MapPin, Plus, Shirt, Smile, Trash2, Utensils } from "lucide-react";
+import { Bookmark, Camera, ChevronLeft, Coffee, Heart, MapPin, Plus, Shirt, Trash2, Utensils } from "lucide-react";
 import { ActiveTab, AudioNote, DrinkItem, FoodItem, JournalEntry, LocationItem, WishlistItem } from "../types";
 import AIInputBox from "./record/AIInputBox";
 import LocationPicker from "./record/LocationPicker";
@@ -27,8 +27,6 @@ type ParsedRecord = {
   location?: string;
   locationTags?: string[];
 };
-
-type SectionId = "mood" | "food" | "drink" | "wishlist" | "look" | "location";
 
 const FOOD_IMAGE = "https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=360&auto=format&fit=crop";
 const DRINK_IMAGE = "https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=360&auto=format&fit=crop";
@@ -92,14 +90,14 @@ function Stars({ value, onChange }: { value: number; onChange: (value: number) =
   );
 }
 
-function ImagePicker({ image, label, onChange }: { image?: string; label: string; onChange: (value: string) => void }) {
+function ImagePicker({ image, label, onChange, className = "" }: { image?: string; label: string; onChange: (value: string) => void; className?: string }) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   return (
     <button
       type="button"
       onClick={() => inputRef.current?.click()}
-      className="relative w-[88px] h-[88px] rounded-2xl border border-dashed border-[#dfd6c5] bg-[#faf6ee] overflow-hidden flex-shrink-0 flex items-center justify-center text-[#e3a387]"
+      className={`relative rounded-2xl border border-dashed border-[#dfd6c5] bg-[#faf6ee] overflow-hidden flex-shrink-0 flex items-center justify-center text-[#e3a387] ${className || "w-[88px] h-[88px]"}`}
     >
       {image ? <img src={image} alt={label} className="absolute inset-0 w-full h-full object-cover" /> : <Camera size={22} />}
       <input
@@ -118,6 +116,9 @@ function ImagePicker({ image, label, onChange }: { image?: string; label: string
 
 function ItemEditor({
   item,
+  title,
+  subtitle,
+  icon,
   imageLabel,
   namePlaceholder,
   notePlaceholder,
@@ -126,6 +127,9 @@ function ItemEditor({
 }: {
   key?: string;
   item: FoodItem | DrinkItem;
+  title: string;
+  subtitle: string;
+  icon: ReactNode;
   imageLabel: string;
   namePlaceholder: string;
   notePlaceholder: string;
@@ -133,74 +137,58 @@ function ItemEditor({
   onRemove?: () => void;
 }) {
   return (
-    <div className="flex gap-3 rounded-2xl bg-[#fffdf8] border border-[#eadfce] p-3">
-      <ImagePicker image={item.image} label={imageLabel} onChange={(image) => onChange({ image })} />
-      <div className="flex-1 min-w-0 space-y-2">
+    <article className="relative rounded-[22px] bg-white border border-[#dfd6c5] p-4 shadow-[0_5px_14px_rgba(93,84,73,0.05)]">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h3 className="min-w-0 flex items-center gap-2 text-[16px] font-bold font-serif text-[#8e9a86]">
+          {icon}
+          <span className="truncate">{title} · {subtitle}</span>
+        </h3>
+        {onRemove && (
+          <button type="button" onClick={onRemove} className="w-8 h-8 rounded-full bg-[#fffdf8] border border-[#dfd6c5] text-[#a0907d] flex items-center justify-center flex-shrink-0">
+            <Trash2 size={14} />
+          </button>
+        )}
+      </div>
+      <ImagePicker image={item.image} label={imageLabel} onChange={(image) => onChange({ image })} className="w-full h-[132px] max-[380px]:h-[118px]" />
+      <div className="mt-3 min-w-0 space-y-2">
         <div className="flex gap-2">
           <input
             value={item.name}
             onChange={(event) => onChange({ name: event.target.value })}
             placeholder={namePlaceholder}
-            className="min-w-0 flex-1 border-b border-[#dfd6c5] bg-transparent pb-1 text-base font-bold outline-none placeholder:text-[#b8ad9f]"
+            className="min-w-0 flex-1 border-b border-[#dfd6c5] bg-transparent pb-1 text-[15px] font-bold outline-none placeholder:text-[#b8ad9f]"
           />
-          {onRemove && (
-            <button type="button" onClick={onRemove} className="w-8 h-8 rounded-full bg-white border border-[#dfd6c5] text-[#a0907d] flex items-center justify-center">
-              <Trash2 size={14} />
-            </button>
-          )}
         </div>
         <Stars value={item.rating || 4} onChange={(rating) => onChange({ rating })} />
         <input
           value={item.note || ""}
           onChange={(event) => onChange({ note: event.target.value })}
           placeholder={notePlaceholder}
-          className="w-full bg-transparent text-sm text-[#8a7d70] outline-none placeholder:text-[#b8ad9f]"
+          className="w-full bg-transparent text-xs text-[#8a7d70] outline-none placeholder:text-[#b8ad9f]"
         />
       </div>
-    </div>
+    </article>
   );
 }
 
-function CollapsibleSection({
-  id,
-  activeSection,
-  onToggle,
-  icon,
-  title,
-  summary,
-  children,
-}: {
-  id: SectionId;
-  activeSection: SectionId | null;
-  onToggle: (id: SectionId) => void;
-  icon: ReactNode;
-  title: string;
-  summary: string;
-  children: ReactNode;
-}) {
-  const isOpen = activeSection === id;
-
+function JournalCard({ title, subtitle, icon, children, action }: { title: string; subtitle: string; icon: ReactNode; children: ReactNode; action?: ReactNode }) {
   return (
-    <section className="rounded-[20px] bg-white border border-[#dfd6c5] shadow-sm overflow-hidden">
-      <button type="button" onClick={() => onToggle(id)} className="w-full min-h-[60px] px-4 py-3 flex items-center justify-between gap-3 text-left">
-        <span className="flex items-center gap-3 min-w-0">
-          <span className="w-9 h-9 rounded-full bg-[#faf6ee] border border-[#eadfce] flex items-center justify-center text-[#8e9a86] flex-shrink-0">{icon}</span>
-          <span className="min-w-0">
-            <span className="block text-base font-bold font-serif text-[#6d6358]">{title}</span>
-            <span className="block text-xs text-[#a0907d] truncate">{summary}</span>
-          </span>
-        </span>
-        <ChevronDown size={18} className={`flex-shrink-0 text-[#a0907d] transition-transform ${isOpen ? "rotate-180" : ""}`} />
-      </button>
-      {isOpen && <div className="border-t border-[#f0e7d8] p-4 space-y-4">{children}</div>}
-    </section>
+    <article className="rounded-[22px] bg-white border border-[#dfd6c5] p-4 shadow-[0_5px_14px_rgba(93,84,73,0.05)]">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h3 className="min-w-0 flex items-center gap-2 text-[16px] font-bold font-serif text-[#8e9a86]">
+          {icon}
+          <span className="truncate">{title} · {subtitle}</span>
+        </h3>
+        {action}
+      </div>
+      {children}
+    </article>
   );
 }
 
 export default function RecordView({ onAddEntry, onNavigate, existingEntry }: RecordViewProps) {
   const [inputText, setInputText] = useState("");
   const [selectedMood, setSelectedMood] = useState<MoodOption>(() => getInitialMood(existingEntry));
-  const [activeSection, setActiveSection] = useState<SectionId | null>(null);
   const existingFoodItems = existingEntry ? getFoodItems(existingEntry) : [];
   const existingDrinkItems = existingEntry ? getDrinkItems(existingEntry) : [];
   const existingAudioNotes = existingEntry ? getAudioNotes(existingEntry) : [];
@@ -224,7 +212,6 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
   const [parseHint, setParseHint] = useState("");
   const [audioNote, setAudioNote] = useState<AudioNote | null>(existingAudioNotes[existingAudioNotes.length - 1] || null);
 
-  const toggleSection = (id: SectionId) => setActiveSection((current) => (current === id ? null : id));
   const updateFoodItem = (id: string, patch: Partial<FoodItem>) => setFoodItems((current) => current.map((item) => (item.id === id ? { ...item, ...patch } : item)));
   const updateDrinkItem = (id: string, patch: Partial<DrinkItem>) => setDrinkItems((current) => current.map((item) => (item.id === id ? { ...item, ...patch } : item)));
   const removeFoodItem = (id: string) => setFoodItems((current) => (current.length > 1 ? current.filter((item) => item.id !== id) : current));
@@ -381,15 +368,16 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
 
       <AIInputBox value={inputText} onChange={setInputText} hint={parseHint} isParsing={isParsing} audioNote={audioNote} onAudioNoteChange={setAudioNote} onParse={handleAIParse} />
 
-      <CollapsibleSection id="mood" activeSection={activeSection} onToggle={toggleSection} icon={<Smile size={18} />} title="今日心情" summary={`${selectedMood.char} ${selectedMood.text}`}>
-        <MoodSelector selectedMood={selectedMood} onChange={setSelectedMood} />
-      </CollapsibleSection>
+      <MoodSelector selectedMood={selectedMood} onChange={setSelectedMood} />
 
-      <CollapsibleSection id="food" activeSection={activeSection} onToggle={toggleSection} icon={<Utensils size={18} />} title="今日食味" summary={summarizeNames(foodItems) || "点击添加吃到的东西"}>
+      <section className="space-y-3">
         {foodItems.map((item, index) => (
           <ItemEditor
             key={item.id}
             item={item}
+            title={index === 0 ? "今日食味" : `今日食味 ${index + 1}`}
+            subtitle="DINING"
+            icon={<Utensils size={18} strokeWidth={1.8} />}
             imageLabel="食物照片"
             namePlaceholder="例如：披萨"
             notePlaceholder="这一口是什么感觉..."
@@ -400,44 +388,33 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
         <button type="button" onClick={() => setFoodItems((current) => [...current, createFoodItem()])} className="w-full rounded-full border border-dashed border-[#dfd6c5] bg-white/70 py-2.5 text-sm font-bold text-[#8e9a86] flex items-center justify-center gap-2 shadow-sm">
           <Plus size={17} /> 再记一份好吃的
         </button>
-      </CollapsibleSection>
+      </section>
 
-      <CollapsibleSection id="drink" activeSection={activeSection} onToggle={toggleSection} icon={<Coffee size={18} />} title="流动的光" summary={summarizeNames(drinkItems) || "点击添加喝到的饮品"}>
-        {drinkItems.map((item) => (
-          <ItemEditor
-            key={item.id}
-            item={item}
-            imageLabel="饮品照片"
-            namePlaceholder="例如：葡萄冰茶"
-            notePlaceholder="这杯喝起来怎么样..."
-            onChange={(patch) => updateDrinkItem(item.id, patch)}
-            onRemove={drinkItems.length > 1 ? () => removeDrinkItem(item.id) : undefined}
-          />
-        ))}
-        <button type="button" onClick={() => setDrinkItems((current) => [...current, createDrinkItem()])} className="w-full rounded-full border border-dashed border-[#dfd6c5] bg-white/70 py-2.5 text-sm font-bold text-[#8e9a86] flex items-center justify-center gap-2 shadow-sm">
-          <Plus size={17} /> 再记一杯喝的
-        </button>
-      </CollapsibleSection>
-
-      <CollapsibleSection id="wishlist" activeSection={activeSection} onToggle={toggleSection} icon={<Heart size={18} />} title="心动清单" summary={wishlistItems.length ? `${wishlistItems.length} 个想吃/想喝` : "记录还没吃到的愿望"}>
-        <label className="flex items-center gap-2 text-sm font-bold text-[#8a7d70]">
-          <input type="checkbox" checked={wishlistEnabled} onChange={(event) => setWishlistEnabled(event.target.checked)} className="w-4 h-4 rounded border-[#dfd6c5] accent-[#8e9a86]" />
-          开启此记
-        </label>
-        {wishlistEnabled && (
+      <JournalCard
+        title="心动清单"
+        subtitle="WISHLIST"
+        icon={<Heart size={18} strokeWidth={1.8} />}
+        action={
+          <label className="flex items-center gap-2 text-xs font-bold text-[#8a7d70]">
+            <input type="checkbox" checked={wishlistEnabled} onChange={(event) => setWishlistEnabled(event.target.checked)} className="w-4 h-4 rounded border-[#dfd6c5] accent-[#8e9a86]" />
+            开启此记
+          </label>
+        }
+      >
+        {wishlistEnabled ? (
           <div className="space-y-3">
             <div className="flex gap-3">
-              <ImagePicker image={wishlistImage} label="心动照片" onChange={setWishlistImage} />
+              <ImagePicker image={wishlistImage} label="心动照片" onChange={setWishlistImage} className="w-[92px] h-[92px]" />
               <div className="flex-1 min-w-0 space-y-2">
                 <div className="inline-flex rounded-full border border-[#dfd6c5] bg-[#fffdf8] p-1">
                   <button type="button" onClick={() => setWishlistType("food")} className={`rounded-full px-3 py-1 text-xs font-bold ${wishlistType === "food" ? "bg-[#e3a387] text-white" : "text-[#8a7d70]"}`}>想吃</button>
                   <button type="button" onClick={() => setWishlistType("drink")} className={`rounded-full px-3 py-1 text-xs font-bold ${wishlistType === "drink" ? "bg-[#8e9a86] text-white" : "text-[#8a7d70]"}`}>想喝</button>
                 </div>
-                <input value={wishlistText} onChange={(event) => setWishlistText(event.target.value)} placeholder="例如：寿喜锅 / 葡萄冰茶" className="w-full border-b border-[#dfd6c5] bg-transparent pb-1 text-base font-bold outline-none placeholder:text-[#b8ad9f]" />
-                <input value={wishlistNote} onChange={(event) => setWishlistNote(event.target.value)} placeholder="为什么心动？" className="w-full bg-transparent text-sm text-[#a0907d] outline-none placeholder:text-[#b8ad9f]" />
+                <input value={wishlistText} onChange={(event) => setWishlistText(event.target.value)} placeholder="例如：寿喜锅 / 葡萄冰茶" className="w-full border-b border-[#dfd6c5] bg-transparent pb-1 text-sm font-bold outline-none placeholder:text-[#b8ad9f]" />
+                <input value={wishlistNote} onChange={(event) => setWishlistNote(event.target.value)} placeholder="为什么心动？" className="w-full bg-transparent text-xs text-[#a0907d] outline-none placeholder:text-[#b8ad9f]" />
               </div>
             </div>
-            <button type="button" onClick={addWishlistItem} className="rounded-full bg-[#fffdf8] border border-[#dfd6c5] px-4 py-2 text-sm font-bold text-[#8a7d70]">+ 记录</button>
+            <button type="button" onClick={addWishlistItem} className="rounded-full bg-[#fffdf8] border border-[#dfd6c5] px-4 py-2 text-xs font-bold text-[#8a7d70]">+ 记录</button>
             <div className="flex flex-wrap gap-2">
               {wishlistItems.map((item) => (
                 <span key={item.id} className="inline-flex items-center gap-2 rounded-full border border-[#f0d2c5] bg-[#fff3ec] px-3 py-1.5 text-xs font-bold text-[#c86f50]">
@@ -449,25 +426,43 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
               ))}
             </div>
           </div>
+        ) : (
+          <p className="text-sm leading-7 text-[#a0907d] italic font-serif">“有没有那一瞬间，心里泛起小小的涟漪？”</p>
         )}
-      </CollapsibleSection>
+      </JournalCard>
 
-      <CollapsibleSection id="look" activeSection={activeSection} onToggle={toggleSection} icon={<Shirt size={18} />} title="今日着物" summary={outfitText || "点击记录穿搭"}>
-        <div className="flex gap-3 rounded-2xl bg-[#fffdf8] border border-[#eadfce] p-3">
-          <ImagePicker image={outfitImage} label="穿搭照片" onChange={setOutfitImage} />
-          <div className="flex-1 min-w-0 space-y-2">
-            <input value={outfitText} onChange={(event) => setOutfitText(event.target.value)} placeholder="例如：松弛感穿搭" className="w-full border-b border-[#dfd6c5] bg-transparent pb-1 text-base font-bold outline-none placeholder:text-[#b8ad9f]" />
+      <section className="space-y-3">
+        {drinkItems.map((item) => (
+          <ItemEditor
+            key={item.id}
+            item={item}
+            title="流动的光"
+            subtitle="COFFEE & TEA"
+            icon={<Coffee size={18} strokeWidth={1.8} />}
+            imageLabel="饮品照片"
+            namePlaceholder="例如：葡萄冰茶"
+            notePlaceholder="这杯喝起来怎么样..."
+            onChange={(patch) => updateDrinkItem(item.id, patch)}
+            onRemove={drinkItems.length > 1 ? () => removeDrinkItem(item.id) : undefined}
+          />
+        ))}
+        <button type="button" onClick={() => setDrinkItems((current) => [...current, createDrinkItem()])} className="w-full rounded-full border border-dashed border-[#dfd6c5] bg-white/70 py-2.5 text-sm font-bold text-[#8e9a86] flex items-center justify-center gap-2 shadow-sm">
+          <Plus size={17} /> 再记一杯喝的
+        </button>
+      </section>
+
+      <JournalCard title="今日着物" subtitle="OUTFIT" icon={<Shirt size={18} strokeWidth={1.8} />}>
+        <ImagePicker image={outfitImage} label="穿搭照片" onChange={setOutfitImage} className="w-full h-[132px] max-[380px]:h-[118px]" />
+        <div className="mt-3 space-y-2">
+            <input value={outfitText} onChange={(event) => setOutfitText(event.target.value)} placeholder="例如：松弛感穿搭" className="w-full border-b border-[#dfd6c5] bg-transparent pb-1 text-[15px] font-bold outline-none placeholder:text-[#b8ad9f]" />
             <Stars value={outfitRating} onChange={setOutfitRating} />
-            <input value={outfitNote} onChange={(event) => setOutfitNote(event.target.value)} placeholder="给今天的穿搭写一句话..." className="w-full bg-transparent text-sm text-[#8a7d70] outline-none placeholder:text-[#b8ad9f]" />
-          </div>
+            <input value={outfitNote} onChange={(event) => setOutfitNote(event.target.value)} placeholder="给今天的穿搭写一句话..." className="w-full bg-transparent text-xs text-[#8a7d70] outline-none placeholder:text-[#b8ad9f]" />
         </div>
-      </CollapsibleSection>
+      </JournalCard>
 
-      <CollapsibleSection id="location" activeSection={activeSection} onToggle={toggleSection} icon={<MapPin size={18} />} title="停留之地" summary={locations.map((item) => item.name).join("、") || location || "点击添加定位"}>
-        <LocationPicker location={location} locations={locations} onLocationChange={setLocation} onLocationsChange={setLocations} />
-      </CollapsibleSection>
+      <LocationPicker location={location} locations={locations} onLocationChange={setLocation} onLocationsChange={setLocations} />
 
-      <div className="fixed left-1/2 bottom-[92px] z-50 w-full max-w-[672px] -translate-x-1/2 px-5 pointer-events-none max-[520px]:bottom-[86px]">
+      <div className="fixed left-1/2 bottom-[92px] z-50 w-full max-w-[672px] -translate-x-1/2 px-5 pointer-events-none max-[520px]:bottom-[calc(88px+env(safe-area-inset-bottom))]">
         <button onClick={finishToday} disabled={isSubmitting} className="pointer-events-auto w-full rounded-full bg-[#8e9a86] py-3.5 text-base font-bold text-white shadow-[0_8px_22px_rgba(142,154,134,0.32)] flex items-center justify-center gap-2">
           <Bookmark size={19} />
           {isSubmitting ? "正在保存..." : "完成今天"}
