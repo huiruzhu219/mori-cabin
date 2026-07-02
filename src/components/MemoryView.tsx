@@ -7,7 +7,7 @@ import MoodChart from "./memory/MoodChart";
 import MoodDetailView from "./memory/MoodDetailView";
 import { getMoodScore } from "./memory/memoryUtils";
 import AvatarImage from "./ui/AvatarImage";
-import { getAudioNotes, getDrinkItems, getFoodItems, getLocationItems } from "../utils/recordItems";
+import { getAudioNotes, getDrinkItems, getFoodItems, getLocationItems, getWishlistItems } from "../utils/recordItems";
 
 interface MemoryViewProps {
   entries: JournalEntry[];
@@ -17,6 +17,56 @@ interface MemoryViewProps {
 
 function toDateKey(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function joinNames(items: Array<{ name: string }>) {
+  return items.map((item) => item.name).filter(Boolean);
+}
+
+function buildLocalMonthlySummary(entries: JournalEntry[], monthLabel: string) {
+  if (!entries.length) return "这个月还在等第一条记录。先从一句话、一个地点，或一段语音开始就好。";
+
+  const foods = joinNames(entries.flatMap(getFoodItems)).slice(0, 6);
+  const drinks = joinNames(entries.flatMap(getDrinkItems)).slice(0, 6);
+  const locations = joinNames(entries.flatMap(getLocationItems)).slice(0, 4);
+  const avgMood = entries.reduce((sum, entry) => sum + getMoodScore(entry), 0) / entries.length;
+  const moodText = avgMood >= 4 ? "整体偏明亮舒展" : avgMood >= 3 ? "整体平稳" : "有些时刻需要被轻轻照顾";
+  const details = [
+    foods.length ? `吃过 ${foods.join("、")}` : "",
+    drinks.length ? `喝过 ${drinks.join("、")}` : "",
+    locations.length ? `去过 ${locations.join("、")}` : "",
+  ].filter(Boolean);
+
+  return `${monthLabel}你留下了 ${entries.length} 天生活记录，${moodText}。${details.length ? details.join("，") + "。" : ""}这些小片段拼在一起，就是这个月认真生活的痕迹。`;
+}
+
+function buildMonthlySummaryPayload(entries: JournalEntry[], monthLabel: string) {
+  const moodScores = entries.map(getMoodScore);
+  const averageMood = moodScores.length ? Number((moodScores.reduce((sum, score) => sum + score, 0) / moodScores.length).toFixed(1)) : 0;
+
+  return {
+    month: monthLabel,
+    stats: {
+      recordedDays: entries.length,
+      averageMood,
+      foodCount: entries.reduce((sum, entry) => sum + getFoodItems(entry).length, 0),
+      drinkCount: entries.reduce((sum, entry) => sum + getDrinkItems(entry).length, 0),
+      locationCount: entries.reduce((sum, entry) => sum + getLocationItems(entry).length, 0),
+      audioCount: entries.reduce((sum, entry) => sum + getAudioNotes(entry).length, 0),
+      wishlistPendingCount: entries.reduce((sum, entry) => sum + getWishlistItems(entry).filter((item) => item.status === "pending").length, 0),
+      wishlistDoneCount: entries.reduce((sum, entry) => sum + getWishlistItems(entry).filter((item) => item.status === "done").length, 0),
+    },
+    records: entries.map((entry) => ({
+      date: entry.date,
+      mood: entry.moodText || entry.mood,
+      moodScore: getMoodScore(entry),
+      foods: joinNames(getFoodItems(entry)),
+      drinks: joinNames(getDrinkItems(entry)),
+      locations: joinNames(getLocationItems(entry)),
+      wishlist: getWishlistItems(entry).map((item) => ({ name: item.name, type: item.type, status: item.status })),
+      dailyReflection: entry.aiReflection,
+    })),
+  };
 }
 
 export default function MemoryView({ entries, onNavigate, userProfile }: MemoryViewProps) {
@@ -52,11 +102,32 @@ export default function MemoryView({ entries, onNavigate, userProfile }: MemoryV
   }, [visibleEntries]);
 
   const drinkCount = useMemo(() => visibleEntries.reduce((sum, entry) => sum + getDrinkItems(entry).length, 0), [visibleEntries]);
-  const monthlyReflection =
-    visibleEntries[visibleEntries.length - 1]?.aiReflection ||
-    (visibleEntries.length
-      ? "这个月的生活被你一笔一笔接住了。不是每天都要很满，只要有一些被看见的瞬间，就已经很珍贵。"
-      : "这个月还在等第一条记录。先从一句话、一个地点，或一段语音开始就好。");
+  const monthKey = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}`;
+  const localMonthlySummary = useMemo(() => buildLocalMonthlySummary(visibleEntries, monthKey), [monthKey, visibleEntries]);
+  const [monthlyReflection, setMonthlyReflection] = useState(localMonthlySummary);
+
+  useEffect(() => {
+    let cancelled = false;
+    setMonthlyReflection(localMonthlySummary);
+    if (!visibleEntries.length) return;
+
+    fetch("/api/ai/monthly-summary", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(buildMonthlySummaryPayload(visibleEntries, monthKey)),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!cancelled && typeof data?.summary === "string" && data.summary.trim()) {
+          setMonthlyReflection(data.summary.trim());
+        }
+      })
+      .catch((error) => console.warn("Monthly summary fallback used", error));
+
+    return () => {
+      cancelled = true;
+    };
+  }, [localMonthlySummary, monthKey, visibleEntries]);
 
   const move = (step: number) => {
     if (!visibleEntries.length) return;

@@ -109,6 +109,7 @@ export interface Recommendation {
   id?: string;
   name: string;
   type?: "food" | "drink";
+  source?: "history" | "wishlist";
   score?: number;
   rating: number;
   match: number;

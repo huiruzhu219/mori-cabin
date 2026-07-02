@@ -229,6 +229,7 @@ export function getRecommendation(records: JournalEntry[], type: "food" | "drink
     id: candidate.id,
     name: candidate.name,
     type,
+    source: candidate.source,
     score: Math.round(score),
     rating: roundedRating,
     match: Math.max(78, Math.min(98, Math.round(68 + score / 2.6))),

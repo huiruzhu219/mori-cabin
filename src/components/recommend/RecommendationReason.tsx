@@ -13,7 +13,7 @@ export default function RecommendationReason({ recommendation }: RecommendationR
 
   return (
     <div className="rounded-2xl bg-white border border-[#ded2bf] px-4 py-3 shadow-sm">
-      <p className="truncate text-sm font-bold text-[#7a6b4c]">
+      <p className="text-sm font-bold leading-6 text-[#7a6b4c]">
         {reasonText}
       </p>
     </div>

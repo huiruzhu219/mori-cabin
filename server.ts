@@ -511,7 +511,8 @@ app.post("/api/ai/monthly-summary", async (req, res) => {
     const content = await callCompatibleChat([
       {
         role: "system",
-        content: "根据生活记录生成一段中文月度总结。语气温柔，像朋友聊天，不要像数据报告。",
+        content:
+          "你是 Mori Cabin 的月度回忆整理助手。请根据用户这一整个月的生活记录，生成一段中文月度小结。要求：1. 必须综合整个月的数据，不要只总结某一天；2. 可以提到本月出现较多的心情、食物、饮品、地点和生活节奏；3. 语气温柔、具体，像朋友帮用户回看这个月，不要像数据报告；4. 不要编造记录里没有的事件、地点、食物或情绪；5. 不要说 AI、算法、模型、数据分析；6. 长度 100-180 个中文字符；7. 如果记录很少，要诚实说明这个月记录还不多，但仍然给出温柔总结；8. 只输出正文，不要 Markdown。",
       },
       {
         role: "user",
@@ -528,7 +529,7 @@ app.post("/api/ai/monthly-summary", async (req, res) => {
 
 function normalizeRecommendationReason(value: unknown, fallback: string) {
   const text = String(value || fallback || "").replace(/\s+/g, " ").trim();
-  return text.length > 56 ? `${text.slice(0, 54)}...` : text;
+  return text.length > 120 ? `${text.slice(0, 118)}...` : text;
 }
 
 function normalizeReasonChips(value: unknown, fallback: string[]) {
@@ -557,7 +558,7 @@ app.post("/api/ai/recommend-reason", async (req, res) => {
       {
         role: "system",
         content:
-          "你是 Mori Cabin 的温柔推荐文案助手。请把算法给出的吃喝推荐理由润色成中文生活化短句。要求：1. 像朋友轻声建议，不要营销腔；2. 不要说 AI、算法、数据、模型；3. 不要编造用户没提供的信息；4. reason 28-52 个中文字符，适合移动端一行展示；5. reasons 输出 2-3 个极短依据，每个不超过 8 个字；6. 只输出 JSON，不要 Markdown。",
+          "你是 Mori Cabin 的温柔推荐文案助手。请把算法给出的吃喝推荐整理成一段更有画面感的中文推荐理由。要求：1. 像朋友轻声建议，不要营销腔；2. 不要说 AI、算法、模型、数据；3. 只能使用用户提供的字段，不要编造没出现过的经历、地点、口味或情绪；4. reason 输出 60-100 个中文字符，可以有一点生活感和场景感；5. reasons 输出 2-3 个短依据，每个不超过 8 个中文字符；6. 如果来自心动清单，突出之前想试、现在可以兑现；7. 如果来自历史记录，突出评分、最近多久没尝试、标签偏好；8. 只输出 JSON，不要 Markdown。JSON 格式：{\"reason\":\"...\",\"reasons\":[\"...\",\"...\"]}",
       },
       {
         role: "user",
@@ -566,6 +567,7 @@ app.post("/api/ai/recommend-reason", async (req, res) => {
           name: recommendation.name,
           rating: recommendation.rating,
           tag: recommendation.tag,
+          source: recommendation.source,
           lastTried: recommendation.lastTried,
           historyEval: recommendation.historyEval,
           rawReason: recommendation.reason,
