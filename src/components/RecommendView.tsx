@@ -113,6 +113,7 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
   const [type, setType] = useState<"eat" | "drink">("eat");
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState(false);
+  const [reasonLoading, setReasonLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [shownIds, setShownIds] = useState<string[]>([]);
   const requestIdRef = useRef(0);
@@ -128,18 +129,23 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
     const requestId = requestIdRef.current + 1;
     requestIdRef.current = requestId;
     setLoading(true);
+    setReasonLoading(false);
     setSaved(false);
     const excludeIds = resetHistory ? [] : shownIds;
     const localRecommendation = getRecommendation(entries, nextType === "eat" ? "food" : "drink", { excludeIds });
     if (localRecommendation) {
       rememberRecommendation(localRecommendation);
       setLoading(false);
+      setReasonLoading(true);
       polishRecommendationReason(localRecommendation, nextType)
         .then((polished) => {
           if (!polished || requestIdRef.current !== requestId) return;
           rememberRecommendation({ ...localRecommendation, ...polished });
         })
-        .catch((error) => console.warn("Recommendation reason polish fallback used", error));
+        .catch((error) => console.warn("Recommendation reason polish fallback used", error))
+        .finally(() => {
+          if (requestIdRef.current === requestId) setReasonLoading(false);
+        });
       return;
     }
     try {
@@ -151,6 +157,7 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
       const data = await response.json();
       if (data?.recommendation) {
         rememberRecommendation(data.recommendation);
+        setReasonLoading(false);
         return;
       }
     } catch (error) {
@@ -160,6 +167,7 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
     }
 
     rememberRecommendation(FALLBACKS[nextType][0]);
+    setReasonLoading(false);
   };
 
   useEffect(() => {
@@ -203,7 +211,7 @@ export default function RecommendView({ onNavigate, onAddEntry, userProfile, ent
       ) : (
         <section className="space-y-4">
           <MagicCard recommendation={recommendation} />
-          <RecommendationReason recommendation={recommendation} />
+          <RecommendationReason recommendation={recommendation} loading={reasonLoading} />
 
           <div className="fixed left-1/2 bottom-[92px] z-[60] w-full max-w-[672px] -translate-x-1/2 px-5 grid grid-cols-2 gap-3 pointer-events-none max-[520px]:bottom-[calc(88px+env(safe-area-inset-bottom))]">
             <button onClick={() => loadRecommendation(type)} className="pointer-events-auto h-12 rounded-full bg-white border border-[#dfd6c5] text-sm font-bold text-[#8e9a86] flex items-center justify-center gap-2 shadow-[0_8px_22px_rgba(93,84,73,0.12)]">

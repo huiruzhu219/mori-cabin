@@ -104,12 +104,19 @@ export default function MemoryView({ entries, onNavigate, userProfile }: MemoryV
   const drinkCount = useMemo(() => visibleEntries.reduce((sum, entry) => sum + getDrinkItems(entry).length, 0), [visibleEntries]);
   const monthKey = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}`;
   const localMonthlySummary = useMemo(() => buildLocalMonthlySummary(visibleEntries, monthKey), [monthKey, visibleEntries]);
-  const [monthlyReflection, setMonthlyReflection] = useState(localMonthlySummary);
+  const [monthlyReflection, setMonthlyReflection] = useState("");
+  const [monthlyReflectionLoading, setMonthlyReflectionLoading] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    setMonthlyReflection(localMonthlySummary);
-    if (!visibleEntries.length) return;
+    if (!visibleEntries.length) {
+      setMonthlyReflection(localMonthlySummary);
+      setMonthlyReflectionLoading(false);
+      return;
+    }
+
+    setMonthlyReflection("");
+    setMonthlyReflectionLoading(true);
 
     fetch("/api/ai/monthly-summary", {
       method: "POST",
@@ -122,7 +129,13 @@ export default function MemoryView({ entries, onNavigate, userProfile }: MemoryV
           setMonthlyReflection(data.summary.trim());
         }
       })
-      .catch((error) => console.warn("Monthly summary fallback used", error));
+      .catch((error) => {
+        console.warn("Monthly summary fallback used", error);
+        if (!cancelled) setMonthlyReflection(localMonthlySummary);
+      })
+      .finally(() => {
+        if (!cancelled) setMonthlyReflectionLoading(false);
+      });
 
     return () => {
       cancelled = true;
@@ -175,7 +188,9 @@ export default function MemoryView({ entries, onNavigate, userProfile }: MemoryV
               <Sparkles size={17} />
               <span className="text-sm font-bold">AI 月度小结</span>
             </div>
-            <p className="mt-3 text-[17px] leading-8 font-serif text-[#6d6358]">{monthlyReflection}</p>
+            <p className="mt-3 min-h-[96px] text-[17px] leading-8 font-serif text-[#6d6358]">
+              {monthlyReflectionLoading ? "正在把这个月的记录慢慢整理成一段回忆..." : monthlyReflection}
+            </p>
           </article>
 
           <div className="rounded-full bg-white border border-[#ded2bf] px-4 py-3 text-sm font-bold text-[#7a6b4c] shadow-sm truncate">
