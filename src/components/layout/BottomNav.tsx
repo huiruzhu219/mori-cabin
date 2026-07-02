@@ -34,7 +34,7 @@ export default function BottomNav({ activeTab, onNavigate }: BottomNavProps) {
   };
 
   return (
-    <nav className="fixed md:absolute bottom-0 left-0 right-0 z-50">
+    <nav className="fixed md:absolute bottom-0 left-0 right-0 z-[60]">
       <div className="mx-auto max-w-[672px] bg-white/95 backdrop-blur-md border-t border-[#eadfd0] rounded-t-[24px] shadow-[0_-6px_24px_rgba(93,84,73,0.1)] px-2 pt-2 pb-[calc(env(safe-area-inset-bottom)+8px)] max-[520px]:rounded-t-[20px]">
         <div className="flex items-end">
           {renderTab(SIDE_TABS[0])}

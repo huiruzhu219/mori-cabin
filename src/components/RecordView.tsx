@@ -466,7 +466,7 @@ export default function RecordView({ onAddEntry, onNavigate, existingEntry }: Re
 
       <LocationPicker location={location} locations={locations} onLocationChange={setLocation} onLocationsChange={setLocations} />
 
-      <div className="fixed left-1/2 bottom-[92px] z-50 w-full max-w-[672px] -translate-x-1/2 px-5 pointer-events-none max-[520px]:bottom-[calc(88px+env(safe-area-inset-bottom))]">
+      <div className="fixed left-1/2 bottom-[92px] z-[60] w-full max-w-[672px] -translate-x-1/2 px-5 pointer-events-none max-[520px]:bottom-[calc(88px+env(safe-area-inset-bottom))]">
         <button onClick={finishToday} disabled={isSubmitting} className="pointer-events-auto w-full rounded-full bg-[#8e9a86] py-3.5 text-base font-bold text-white shadow-[0_8px_22px_rgba(142,154,134,0.32)] flex items-center justify-center gap-2">
           <Bookmark size={19} />
           {isSubmitting ? "正在保存..." : "完成今天"}
